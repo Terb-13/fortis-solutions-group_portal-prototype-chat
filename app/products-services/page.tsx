@@ -14,38 +14,26 @@ export const metadata = {
 const products = [
   {
     title: "Pressure-sensitive labels",
-    badge: "Portal live",
-    badgeClass: "border-0 bg-[#00A651] text-white hover:bg-[#00A651]/90",
     img: "/images/pressure-sensitive-labels.jpg",
   },
   {
     title: "Renew™ sustainable",
-    badge: "ESG",
-    badgeClass: "border-0 bg-[#003087] text-white",
     img: "/images/renew-badge.png",
   },
   {
     title: "Shrink sleeves",
-    badge: "Catalog",
-    badgeClass: "",
     img: "/images/before-after-card.jpg",
   },
   {
     title: "Flexible packaging",
-    badge: "Catalog",
-    badgeClass: "",
     img: "/images/orem-marietta-press.jpg",
   },
   {
     title: "Folding cartons",
-    badge: "Catalog",
-    badgeClass: "",
     img: "/images/fortis-edge-hero.jpg",
   },
   {
     title: "Applicators & extended content",
-    badge: "Catalog",
-    badgeClass: "",
     img: "/images/plant-map.jpg",
   },
 ] as const;
@@ -58,8 +46,7 @@ export default function ProductsServicesPage() {
           Products &amp; services
         </h1>
         <p className="mt-4 text-muted-foreground">
-          Portal starts with digital HP labels. Everything else stays with your
-          Fortis team.
+          Portal-led digital scope — full Fortis catalog with your team.
         </p>
       </div>
 
@@ -86,13 +73,9 @@ export default function ProductsServicesPage() {
               </h2>
               <Badge
                 variant="outline"
-                className={cn(
-                  "shrink-0",
-                  p.badgeClass ||
-                    "border-[#003087]/20 text-muted-foreground",
-                )}
+                className="shrink-0 border-0 bg-[#003087]/8 text-xs font-semibold text-[#003087]"
               >
-                {p.badge}
+                Digital Only
               </Badge>
             </div>
           </article>
@@ -100,8 +83,8 @@ export default function ProductsServicesPage() {
       </div>
 
       <p className="mx-auto mt-12 max-w-2xl text-center text-sm text-muted-foreground">
-        Full catalog: shrink, flex, cartons, applicators, RFID—program by
-        program. Confirm scope with your Fortis contact.
+        Shrink, flex, cartons, applicators — program by program. Confirm scope
+        with your Fortis contact.
       </p>
 
       <div className="mt-10 flex justify-center">

@@ -52,9 +52,9 @@ export default function WhatIsFortisEdgePage() {
           <p className="mt-4 max-w-2xl text-lg text-muted-foreground md:text-xl">
             {FORTIS.subhead}
           </p>
-          <p className="mt-6 max-w-2xl text-pretty text-muted-foreground">
-            The Small Business Unit for Tier 3 &amp; 4—digital plants plus a
-            modern portal without diluting Fortis quality or integrations.
+          <p className="mt-6 max-w-xl text-pretty text-base text-muted-foreground md:text-lg">
+            SBU for Tier 3 &amp; 4 — digital plants + portal. Fortis quality,
+            unchanged.
           </p>
         </div>
       </section>

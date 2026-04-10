@@ -19,10 +19,10 @@ export function FortisLogo({ className }: { className?: string }) {
       </div>
       <div className="min-w-0 text-left leading-tight">
         <div className="truncate text-sm font-semibold text-[#003087] md:max-w-none">
-          {FORTIS.company}
+          {FORTIS.productName}
         </div>
         <div className="hidden text-xs font-medium text-muted-foreground sm:block">
-          Small Business Unit
+          {FORTIS.shortCompany} · SBU
         </div>
       </div>
     </Link>

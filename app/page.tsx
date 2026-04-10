@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { AnnouncementTicker } from "@/components/announcement-ticker";
 import { buttonVariants } from "@/components/ui/button";
-import { FORTIS, FORTIS_CORE_STORY_SHORT } from "@/lib/constants";
+import { FORTIS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
 export const metadata = {
@@ -32,7 +32,7 @@ const beforeAfter = [
 export default function HomePage() {
   return (
     <div className="overflow-hidden">
-      <section className="relative min-h-[min(92vh,880px)]">
+      <section className="relative min-h-[min(100dvh,920px)]">
         <div className="absolute inset-0">
           <Image
             src="/images/fortis-edge-hero.jpg"
@@ -42,9 +42,9 @@ export default function HomePage() {
             className="object-cover"
             sizes="100vw"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#003087]/85 via-[#003087]/55 to-background" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#003087]/88 via-[#003087]/50 to-background" />
         </div>
-        <div className="relative mx-auto flex min-h-[min(92vh,880px)] max-w-7xl flex-col justify-end px-4 pb-16 pt-28 md:px-6 md:pb-24 md:pt-32">
+        <div className="relative mx-auto flex min-h-[min(100dvh,920px)] max-w-7xl flex-col justify-end px-4 pb-20 pt-28 md:px-6 md:pb-28 md:pt-32">
           <div className="max-w-2xl animate-fade-up">
             <p className="mb-3 inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold tracking-wide text-white/90 ring-1 ring-white/20 backdrop-blur-sm">
               <Sparkles className="size-3.5 text-[#00E676]" aria-hidden />
@@ -53,38 +53,12 @@ export default function HomePage() {
             <h1 className="font-heading text-4xl font-semibold tracking-tight text-white md:text-5xl lg:text-6xl">
               {FORTIS.tagline}
             </h1>
-            <p className="mt-4 text-lg text-white/85 md:text-xl">
+            <p className="mt-5 max-w-xl text-lg leading-relaxed text-white/88 md:text-xl">
               {FORTIS.subhead}
             </p>
-            <p className="mt-4 max-w-xl text-sm leading-relaxed text-white/75 md:text-base">
-              {FORTIS_CORE_STORY_SHORT}
-            </p>
-            <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-              <Link
-                href="/customer-portal"
-                className={cn(
-                  buttonVariants({ size: "lg" }),
-                  "h-12 min-w-[200px] bg-[#00A651] px-8 text-base font-semibold text-white shadow-lg shadow-black/20 transition hover:bg-[#00A651]/90",
-                )}
-              >
-                Explore portal
-                <ArrowRight className="ml-2 size-4" />
-              </Link>
-              <Link
-                href="/what-is-fortis-edge"
-                className={cn(
-                  buttonVariants({ size: "lg", variant: "outline" }),
-                  "h-12 min-w-[200px] border-white/40 bg-white/10 text-white backdrop-blur-sm hover:bg-white/20",
-                )}
-              >
-                What is Fortis Edge?
-              </Link>
-            </div>
           </div>
         </div>
       </section>
-
-      <AnnouncementTicker />
 
       <section className="section-y mx-auto max-w-7xl px-4 md:px-6">
         <div className="mx-auto max-w-2xl text-center">
@@ -92,7 +66,7 @@ export default function HomePage() {
             Before → after
           </h2>
           <p className="mt-3 text-muted-foreground">
-            Tier 3 &amp; 4 workflows—faster, clearer, digital-first.
+            Tier 3 &amp; 4 — faster, clearer, digital-first.
           </p>
         </div>
         <div className="mt-12 grid gap-6 md:grid-cols-3">
@@ -132,6 +106,37 @@ export default function HomePage() {
               </div>
             </div>
           ))}
+        </div>
+      </section>
+
+      <AnnouncementTicker />
+
+      <section className="section-y border-t border-border/60 bg-muted/20">
+        <div className="mx-auto flex max-w-4xl flex-col items-center gap-6 px-4 text-center md:px-6">
+          <h2 className="font-heading text-2xl font-semibold text-[#003087] md:text-3xl">
+            Go deeper
+          </h2>
+          <div className="flex w-full max-w-xl flex-col gap-4 sm:max-w-none sm:flex-row sm:justify-center">
+            <Link
+              href="/customer-portal"
+              className={cn(
+                buttonVariants({ size: "lg" }),
+                "h-14 min-w-[220px] flex-1 bg-[#00A651] px-10 text-base font-semibold text-white shadow-lg shadow-black/15 transition hover:bg-[#00A651]/90 sm:flex-initial",
+              )}
+            >
+              Explore the portal
+              <ArrowRight className="ml-2 size-4" />
+            </Link>
+            <Link
+              href="/what-is-fortis-edge"
+              className={cn(
+                buttonVariants({ size: "lg", variant: "outline" }),
+                "h-14 min-w-[220px] flex-1 border-[#003087]/25 bg-card px-10 text-base font-semibold text-[#003087] shadow-sm transition hover:bg-[#003087]/5 sm:flex-initial",
+              )}
+            >
+              What is Fortis Edge?
+            </Link>
+          </div>
         </div>
       </section>
     </div>

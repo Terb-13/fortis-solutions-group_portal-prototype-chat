@@ -17,6 +17,19 @@ const phase2 = [
   { label: "April portal update", date: "Live" },
 ] as const;
 
+function formatMilestoneDate(iso: string, type: string) {
+  if (type === "live") return "Live";
+  try {
+    return new Date(iso + "T12:00:00").toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  } catch {
+    return iso;
+  }
+}
+
 export default function TimelineRoadmapPage() {
   const portal = getPortalContent();
 
@@ -27,33 +40,45 @@ export default function TimelineRoadmapPage() {
           Timeline &amp; roadmap
         </h1>
         <p className="mt-4 text-muted-foreground">
-          Directional dates—confirm with your Fortis Edge contact.
+          Directional dates — confirm with your Fortis Edge contact.
         </p>
       </div>
 
-      <div className="mt-16 overflow-x-auto pb-4">
-        <div className="relative mx-auto min-w-[720px] max-w-5xl px-4">
-          <div className="absolute left-8 right-8 top-7 h-0.5 bg-border md:left-12 md:right-12" />
-          <div className="relative flex justify-between gap-2">
+      <div className="mt-16 overflow-x-auto pb-4 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div className="relative mx-auto min-w-[min(100%,720px)] max-w-5xl px-2 md:px-4">
+          <div className="absolute left-10 right-10 top-7 h-0.5 bg-border md:left-14 md:right-14" />
+          <div className="relative flex justify-between gap-1 md:gap-2">
             {portal.milestones.map((m) => (
               <div
                 key={m.name}
-                className="flex max-w-[22%] flex-col items-center text-center"
+                className="flex max-w-[24%] min-w-[5.5rem] flex-col items-center text-center"
               >
                 <div
                   className={cn(
-                    "relative z-10 flex h-14 w-14 items-center justify-center rounded-full border-4 border-background text-xs font-bold shadow-md",
+                    "relative z-10 flex h-14 w-14 items-center justify-center rounded-full border-4 border-background text-[10px] font-bold uppercase tracking-wide shadow-md",
                     m.type === "live"
-                      ? "bg-[#00A651] text-white"
-                      : "bg-[#003087] text-white",
+                      ? "bg-[#00A651] text-white ring-2 ring-[#00A651]/30"
+                      : "bg-[#003087] text-white ring-2 ring-[#003087]/20",
                   )}
                 >
-                  {m.type === "live" ? "✓" : "→"}
+                  {m.type === "live" ? "●" : "○"}
                 </div>
                 <p className="mt-4 text-xs font-semibold leading-snug text-[#003087]">
                   {m.name}
                 </p>
-                <p className="mt-1 text-xs text-muted-foreground">{m.date}</p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  {formatMilestoneDate(m.date, m.type)}
+                </p>
+                <span
+                  className={cn(
+                    "mt-2 rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide",
+                    m.type === "live"
+                      ? "bg-[#00A651]/15 text-[#00A651]"
+                      : "bg-muted text-muted-foreground",
+                  )}
+                >
+                  {m.type === "live" ? "Live" : "Target"}
+                </span>
               </div>
             ))}
           </div>

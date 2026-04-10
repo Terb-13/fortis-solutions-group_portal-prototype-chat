@@ -187,3 +187,8 @@
     transform: translateX(-50%);
   }
 }
+
+/* Ensure marquee track is 2× content width */
+.animate-marquee {
+  width: max-content;
+}

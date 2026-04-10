@@ -17,9 +17,20 @@ export default function CustomerPortalPage() {
 
   return (
     <div>
-      <section className="relative overflow-hidden border-b border-border/60 bg-gradient-to-br from-[#003087] via-[#003087] to-[#001a44] px-4 py-20 text-white md:px-6 md:py-28">
-        <div className="pointer-events-none absolute -right-20 -top-20 h-80 w-80 rounded-full bg-[#00A651]/20 blur-3xl" />
-        <div className="relative mx-auto max-w-7xl">
+      <section className="relative min-h-[min(72vh,640px)] overflow-hidden border-b border-border/60">
+        <div className="absolute inset-0">
+          <Image
+            src="/images/orem-marietta-press.jpg"
+            alt=""
+            fill
+            priority
+            className="object-cover"
+            sizes="100vw"
+          />
+          <div className="absolute inset-0 bg-gradient-to-br from-[#003087]/92 via-[#003087]/80 to-[#001a44]/95" />
+        </div>
+        <div className="pointer-events-none absolute -right-20 -top-20 h-80 w-80 rounded-full bg-[#00A651]/25 blur-3xl" />
+        <div className="relative mx-auto flex min-h-[min(72vh,640px)] max-w-7xl flex-col justify-end px-4 py-20 text-white md:px-6 md:py-28">
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-white/70">
             The Customer Portal
           </p>

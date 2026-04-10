@@ -83,7 +83,7 @@ export default function BenefitsImpactPage() {
       </div>
 
       <Tabs defaultValue="Sales" className="mt-12">
-        <TabsList className="flex h-auto w-full flex-wrap justify-center gap-2 bg-muted/50 p-2 md:justify-start">
+        <TabsList className="flex h-auto w-full max-w-full flex-nowrap justify-start gap-2 overflow-x-auto overflow-y-hidden bg-muted/50 p-2 [-ms-overflow-style:none] [scrollbar-width:none] md:flex-wrap md:justify-center [&::-webkit-scrollbar]:hidden">
           {(Object.keys(roles) as (keyof typeof roles)[]).map((r) => {
             const Icon = roles[r].icon;
             return (

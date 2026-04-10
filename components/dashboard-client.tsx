@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -489,15 +490,16 @@ export function DashboardClient() {
                   value={JSON.stringify(reviewResult.faqRecommendation, null, 2)}
                 />
               </div>
-              <div className="flex gap-4 items-center">
-                <label className="flex items-center gap-2 text-xs">
-                  <input
-                    type="checkbox"
-                    checked={newFaqVisible}
-                    onChange={(e) => setNewFaqVisible(e.target.checked)}
-                  />
-                  Visible on public FAQ
-                </label>
+              <div className="flex flex-wrap items-center gap-3 rounded-lg border border-border/80 bg-muted/30 px-3 py-2">
+                <span className="text-xs text-muted-foreground">Hidden</span>
+                <Switch
+                  checked={newFaqVisible}
+                  onCheckedChange={setNewFaqVisible}
+                  aria-label="Toggle FAQ visibility on public site"
+                />
+                <span className="text-xs font-medium text-foreground">
+                  Visible on site
+                </span>
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="faqid">Update existing FAQ (optional)</Label>
