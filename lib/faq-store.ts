@@ -178,3 +178,23 @@ export function updateCustomFaq(
   store.customFaqs[idx] = { ...store.customFaqs[idx], ...patch };
   saveFaqStore(store);
 }
+
+/** Counts for dashboard: baseline + custom, published vs hidden from store. */
+export function getPublishedHiddenCounts(): {
+  published: number;
+  hidden: number;
+} {
+  const store = loadFaqStore();
+  const base = getBaselineFaqs();
+  let published = 0;
+  let hidden = 0;
+  for (const b of base) {
+    if (store.hiddenBaselineIds.includes(b.id)) hidden += 1;
+    else published += 1;
+  }
+  for (const c of store.customFaqs) {
+    if (c.visible) published += 1;
+    else hidden += 1;
+  }
+  return { published, hidden };
+}

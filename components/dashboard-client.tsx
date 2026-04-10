@@ -3,6 +3,13 @@
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -11,6 +18,7 @@ import {
   Sheet,
   SheetContent,
   SheetDescription,
+  SheetFooter,
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
@@ -25,6 +33,8 @@ import {
   buildPublicFaqsExport,
   getAllFaqsForAdmin,
   getBaselineFaqs,
+  getPublishedHiddenCounts,
+  loadFaqStore,
   updateBaselineFaq,
   updateCustomFaq,
 } from "@/lib/faq-store";
@@ -52,15 +62,11 @@ export function DashboardClient() {
   const [reviewBusy, setReviewBusy] = useState(false);
   const [reviewResult, setReviewResult] = useState<ReviewResult | null>(null);
   const [reviewError, setReviewError] = useState<string | null>(null);
-  const [newFaqVisible, setNewFaqVisible] = useState(true);
+  const [newFaqPublished, setNewFaqPublished] = useState(true);
   const [updateFaqId, setUpdateFaqId] = useState<string>("");
   const [saveBusy, setSaveBusy] = useState(false);
   const [saveMsg, setSaveMsg] = useState<string | null>(null);
   const [faqTick, setFaqTick] = useState(0);
-
-  const [bulkBusy, setBulkBusy] = useState(false);
-  const [bulkResult, setBulkResult] = useState<string | null>(null);
-  const [bulkError, setBulkError] = useState<string | null>(null);
 
   const refresh = useCallback(() => {
     setRows(loadConversations());
@@ -82,50 +88,38 @@ export function DashboardClient() {
     );
   }, [selected, selectedMessageId]);
 
-  const transcript = useMemo(() => {
-    return rows
-      .map((r) => {
-        const body = r.messages
-          .map((m) => `${m.role.toUpperCase()}: ${m.content}`)
-          .join("\n");
-        return `--- ${r.title} ---\n${body}`;
-      })
-      .join("\n\n");
-  }, [rows]);
+  const metrics = useMemo(() => {
+    void faqTick;
+    const totalConversations = rows.length;
+    const correctionsTotal = rows.reduce(
+      (sum, r) => sum + (r.flags?.length ?? 0),
+      0,
+    );
+    const { published, hidden } = getPublishedHiddenCounts();
+    const faqsAdded = loadFaqStore().customFaqs.length;
+    return {
+      totalConversations,
+      correctionsTotal,
+      faqsAdded,
+      published,
+      hidden,
+    };
+  }, [rows, faqTick]);
 
-  async function runBulkAnalyze() {
-    setBulkBusy(true);
-    setBulkError(null);
-    setBulkResult(null);
-    try {
-      const res = await fetch("/api/dashboard/analyze", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ transcript }),
-      });
-      const data = (await res.json()) as {
-        faqs?: { question: string; answer: string }[];
-        raw?: string;
-        error?: string;
-      };
-      if (!res.ok) {
-        setBulkError(data.error ?? "Analysis failed.");
-        return;
-      }
-      if (data.faqs?.length) {
-        for (const f of data.faqs) {
-          addCustomFaq({ question: f.question, answer: f.answer, visible: true });
-        }
-        setBulkResult(`Added ${data.faqs.length} FAQ(s) to the store (visible).`);
-        setFaqTick((x) => x + 1);
-        refresh();
-        return;
-      }
-      if (data.raw) setBulkResult(data.raw);
-    } catch {
-      setBulkError("Network error.");
-    } finally {
-      setBulkBusy(false);
+  function openFlagPanel(messageId: string) {
+    setSelectedMessageId(messageId);
+    setCorrectionNote("");
+    setReviewResult(null);
+    setReviewError(null);
+    setSheetOpen(true);
+  }
+
+  function handleSheetOpenChange(open: boolean) {
+    setSheetOpen(open);
+    if (!open) {
+      setReviewResult(null);
+      setReviewError(null);
+      setCorrectionNote("");
     }
   }
 
@@ -155,7 +149,7 @@ export function DashboardClient() {
         setReviewError(data.error ?? "Review failed.");
         return;
       }
-        if (data.result) {
+      if (data.result) {
         setReviewResult(data.result);
         if (selectedId && selectedMessageId) {
           const prev = selected?.flags ?? [];
@@ -172,6 +166,7 @@ export function DashboardClient() {
             flags: nextFlags,
           });
           refresh();
+          setFaqTick((x) => x + 1);
         }
       }
     } catch {
@@ -187,9 +182,9 @@ export function DashboardClient() {
     addCustomFaq({
       question: r.question,
       answer: r.answer,
-      visible: newFaqVisible,
+      visible: newFaqPublished,
     });
-    setSaveMsg("FAQ added to store (local).");
+    setSaveMsg("New FAQ saved to local store.");
     setFaqTick((x) => x + 1);
     refresh();
   }
@@ -206,7 +201,7 @@ export function DashboardClient() {
         answer: r.answer,
       });
     }
-    setSaveMsg("FAQ updated in store (local).");
+    setSaveMsg("FAQ update saved to local store.");
     setFaqTick((x) => x + 1);
     refresh();
   }
@@ -259,19 +254,21 @@ export function DashboardClient() {
     router.refresh();
   };
 
+  const faq = reviewResult?.faqRecommendation;
+
   return (
-    <div className="mx-auto max-w-6xl px-4 py-12 md:px-6 md:py-16">
+    <div className="mx-auto max-w-6xl px-4 py-10 md:px-6 md:py-14">
       <div className="flex flex-wrap items-start justify-between gap-4 rounded-2xl border border-border/80 bg-card p-6 shadow-card md:p-8">
         <div>
           <p className="text-xs font-bold uppercase tracking-wide text-[#00A651]">
             Team
           </p>
           <h1 className="mt-1 font-heading text-2xl font-semibold text-[#003087] md:text-3xl">
-            Conversations &amp; FAQ builder
+            Dashboard
           </h1>
           <p className="mt-2 max-w-xl text-sm text-muted-foreground">
-            {FORTIS.productName} — stored in-browser. Export merges public FAQs;
-            dev can write <code className="text-xs">data/faqs.json</code>.
+            {FORTIS.productName} — conversations and FAQs stay in your browser;
+            export when you are ready.
           </p>
         </div>
         <Button variant="outline" onClick={() => void logout()}>
@@ -279,27 +276,45 @@ export function DashboardClient() {
         </Button>
       </div>
 
-      <Separator className="my-10" />
-
-      <div className="space-y-3 rounded-2xl border border-dashed border-[#003087]/20 bg-[#003087]/[0.03] p-5 md:p-6">
-        <p className="text-sm font-medium text-foreground">Bulk transcript</p>
-        <p className="text-xs text-muted-foreground">
-          Analyze all saved conversations and add suggested FAQs (visible).
-        </p>
-        <div className="flex flex-wrap gap-2">
-          <Button
-            type="button"
-            className="bg-[#00A651] text-white hover:bg-[#00A651]/90"
-            disabled={bulkBusy || !transcript.trim()}
-            onClick={() => void runBulkAnalyze()}
-          >
-            {bulkBusy ? "Analyzing…" : "Analyze with Grok (bulk)"}
-          </Button>
-        </div>
-        {bulkError && <p className="text-sm text-destructive">{bulkError}</p>}
-        {bulkResult && (
-          <Textarea readOnly rows={6} className="text-xs" value={bulkResult} />
-        )}
+      <div className="mt-8 grid gap-4 sm:grid-cols-3">
+        <Card className="border-border/80 shadow-card">
+          <CardHeader className="pb-2">
+            <CardDescription>Total conversations</CardDescription>
+            <CardTitle className="font-heading text-3xl tabular-nums text-[#003087]">
+              {metrics.totalConversations}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="text-xs text-muted-foreground">
+            Stored assistant threads
+          </CardContent>
+        </Card>
+        <Card className="border-border/80 shadow-card">
+          <CardHeader className="pb-2">
+            <CardDescription>Corrections / FAQs added</CardDescription>
+            <CardTitle className="font-heading text-3xl tabular-nums text-[#003087]">
+              {metrics.correctionsTotal}{" "}
+              <span className="text-lg font-normal text-muted-foreground">
+                / {metrics.faqsAdded}
+              </span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="text-xs text-muted-foreground">
+            Flags · custom FAQs in store
+          </CardContent>
+        </Card>
+        <Card className="border-border/80 shadow-card">
+          <CardHeader className="pb-2">
+            <CardDescription>Published vs hidden FAQs</CardDescription>
+            <CardTitle className="font-heading text-3xl tabular-nums text-[#003087]">
+              {metrics.published}{" "}
+              <span className="text-muted-foreground">/</span>{" "}
+              {metrics.hidden}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="text-xs text-muted-foreground">
+            On site · draft / hidden
+          </CardContent>
+        </Card>
       </div>
 
       <Separator className="my-10" />
@@ -323,7 +338,7 @@ export function DashboardClient() {
                 {rows.length === 0 ? (
                   <tr>
                     <td colSpan={4} className="p-6 text-muted-foreground">
-                      No conversations yet. Use the Assistant, then refresh.
+                      No conversations yet. Use the site assistant, then refresh.
                     </td>
                   </tr>
                 ) : (
@@ -385,30 +400,36 @@ export function DashboardClient() {
             Thread
           </h2>
           <ScrollArea className="h-[min(520px,60vh)] rounded-2xl border border-border/80 bg-card p-4 shadow-inner">
-            <div className="space-y-3 pr-4">
+            <div className="space-y-4 pr-4">
               {selected?.messages.map((m) =>
                 m.role === "assistant" ? (
-                  <button
+                  <div
                     key={m.id}
-                    type="button"
-                    className={cn(
-                      "w-full rounded-lg border border-border bg-card px-3 py-2 text-left text-sm transition-colors hover:border-[#003087]/40",
-                      selectedMessageId === m.id ? "ring-2 ring-[#003087]" : "",
-                    )}
-                    onClick={() => setSelectedMessageId(m.id)}
+                    className="rounded-lg border border-border bg-card px-3 py-3 text-left text-sm"
                   >
-                    <span className="text-xs font-semibold uppercase text-muted-foreground">
-                      assistant
-                    </span>
-                    <p className="mt-1 whitespace-pre-wrap">{m.content}</p>
-                  </button>
+                    <div className="flex flex-wrap items-start justify-between gap-2">
+                      <span className="text-xs font-semibold uppercase text-muted-foreground">
+                        Assistant
+                      </span>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        className="h-7 shrink-0 text-xs"
+                        onClick={() => openFlagPanel(m.id)}
+                      >
+                        Flag this response
+                      </Button>
+                    </div>
+                    <p className="mt-2 whitespace-pre-wrap">{m.content}</p>
+                  </div>
                 ) : (
                   <div
                     key={m.id}
                     className="rounded-lg border border-transparent bg-muted/50 px-3 py-2 text-sm"
                   >
                     <span className="text-xs font-semibold uppercase text-muted-foreground">
-                      user
+                      User
                     </span>
                     <p className="mt-1 whitespace-pre-wrap">{m.content}</p>
                   </div>
@@ -416,146 +437,186 @@ export function DashboardClient() {
               )}
             </div>
           </ScrollArea>
-          <div className="flex flex-wrap gap-2">
-            <Button
-              type="button"
-              variant="secondary"
-              disabled={!selectedAssistantMessage}
-              onClick={() => setSheetOpen(true)}
-            >
-              Flag for review
-            </Button>
-          </div>
         </div>
       )}
 
-      <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
-        <SheetContent className="flex w-full flex-col gap-4 overflow-y-auto border-l-[#003087]/10 sm:max-w-lg">
-          <SheetHeader>
+      <Sheet open={sheetOpen} onOpenChange={handleSheetOpenChange}>
+        <SheetContent
+          side="right"
+          showCloseButton
+          className="flex w-full flex-col gap-0 overflow-y-auto border-l-[#003087]/15 p-0 sm:max-w-lg"
+        >
+          <SheetHeader className="border-b border-border/80 px-6 py-5 text-left">
             <SheetTitle className="font-heading text-[#003087]">
-              Flag for review
+              Review assistant response
             </SheetTitle>
             <SheetDescription>
-              Add a correction note, run Grok to propose an improved reply and
-              FAQ update, then apply actions.
+              Add what was wrong and run Grok for an improved reply and FAQ
+              suggestion.
             </SheetDescription>
           </SheetHeader>
-          {selectedAssistantMessage && (
-            <div className="rounded-lg border bg-muted/40 p-3 text-xs">
-              <p className="font-semibold text-foreground">Selected</p>
-              <p className="mt-2 whitespace-pre-wrap text-muted-foreground">
-                {selectedAssistantMessage.content}
-              </p>
+
+          <div className="flex flex-1 flex-col gap-4 px-6 py-4">
+            {selectedAssistantMessage && (
+              <div className="rounded-lg border bg-muted/40 p-3 text-xs">
+                <p className="font-semibold text-foreground">Flagged message</p>
+                <p className="mt-2 max-h-40 overflow-y-auto whitespace-pre-wrap text-muted-foreground">
+                  {selectedAssistantMessage.content}
+                </p>
+              </div>
+            )}
+            <div className="grid gap-2">
+              <Label htmlFor="correction">Your correction</Label>
+              <Textarea
+                id="correction"
+                rows={4}
+                value={correctionNote}
+                onChange={(e) => setCorrectionNote(e.target.value)}
+                placeholder="This was said incorrectly. It should say…"
+              />
             </div>
-          )}
-          <div className="grid gap-2">
-            <Label htmlFor="correction">Correction note</Label>
-            <Textarea
-              id="correction"
-              rows={4}
-              value={correctionNote}
-              onChange={(e) => setCorrectionNote(e.target.value)}
-              placeholder="What should the bot have said instead?"
-            />
+            <Button
+              type="button"
+              className="bg-[#003087] text-white hover:bg-[#003087]/90"
+              disabled={reviewBusy || !selectedAssistantMessage}
+              onClick={() => void runReview()}
+            >
+              {reviewBusy ? "Analyzing…" : "Analyze with Grok"}
+            </Button>
+            {reviewError && (
+              <p className="text-sm text-destructive">{reviewError}</p>
+            )}
+            {reviewResult && (
+              <div className="space-y-4 text-sm">
+                <div>
+                  <p className="font-semibold text-foreground">
+                    Recommended improved response
+                  </p>
+                  <Textarea
+                    readOnly
+                    rows={5}
+                    className="mt-1 text-xs"
+                    value={reviewResult.improvedBotResponse}
+                  />
+                </div>
+                <div>
+                  <p className="font-semibold text-foreground">
+                    Suggested FAQ ({faq?.action === "edit" ? "update" : "new"})
+                  </p>
+                  {faq && (
+                    <div className="mt-2 space-y-2 rounded-lg border border-border/80 bg-muted/20 p-3 text-xs">
+                      <p>
+                        <span className="font-medium text-foreground">
+                          Q:{" "}
+                        </span>
+                        {faq.question}
+                      </p>
+                      <p>
+                        <span className="font-medium text-foreground">
+                          A:{" "}
+                        </span>
+                        <span className="text-muted-foreground">
+                          {faq.answer}
+                        </span>
+                      </p>
+                      {faq.rationale && (
+                        <p className="text-muted-foreground italic">
+                          {faq.rationale}
+                        </p>
+                      )}
+                    </div>
+                  )}
+                </div>
+                <div className="flex flex-wrap items-center gap-3 rounded-lg border border-border/80 bg-muted/30 px-3 py-2">
+                  <span className="text-xs text-muted-foreground">
+                    Hidden (draft)
+                  </span>
+                  <Switch
+                    checked={newFaqPublished}
+                    onCheckedChange={setNewFaqPublished}
+                    aria-label="Toggle published on site or hidden draft"
+                  />
+                  <span className="text-xs font-medium text-foreground">
+                    Published on site
+                  </span>
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="faqid">Update existing FAQ</Label>
+                  <select
+                    id="faqid"
+                    className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
+                    value={updateFaqId}
+                    onChange={(e) => setUpdateFaqId(e.target.value)}
+                  >
+                    <option value="">— Select FAQ —</option>
+                    {adminFaqs.map((f) => (
+                      <option key={f.id} value={f.id}>
+                        {f.question.slice(0, 72)}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="flex flex-col gap-2 sm:flex-row">
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    className="flex-1"
+                    onClick={applyCreateFaq}
+                  >
+                    Create new FAQ
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    className="flex-1"
+                    disabled={!updateFaqId}
+                    onClick={applyUpdateFaq}
+                  >
+                    Update existing FAQ
+                  </Button>
+                </div>
+              </div>
+            )}
           </div>
-          <Button
-            type="button"
-            className="bg-[#003087] text-white hover:bg-[#003087]/90"
-            disabled={reviewBusy || !selectedAssistantMessage}
-            onClick={() => void runReview()}
-          >
-            {reviewBusy ? "Analyzing…" : "Analyze with Grok"}
-          </Button>
-          {reviewError && (
-            <p className="text-sm text-destructive">{reviewError}</p>
-          )}
-          {reviewResult && (
-            <div className="space-y-3 text-sm">
-              <div>
-                <p className="font-semibold text-foreground">
-                  Improved bot response
-                </p>
-                <Textarea
-                  readOnly
-                  rows={6}
-                  className="mt-1 text-xs"
-                  value={reviewResult.improvedBotResponse}
-                />
-              </div>
-              <div>
-                <p className="font-semibold text-foreground">
-                  FAQ recommendation (JSON)
-                </p>
-                <Textarea
-                  readOnly
-                  rows={8}
-                  className="mt-1 font-mono text-xs"
-                  value={JSON.stringify(reviewResult.faqRecommendation, null, 2)}
-                />
-              </div>
-              <div className="flex flex-wrap items-center gap-3 rounded-lg border border-border/80 bg-muted/30 px-3 py-2">
-                <span className="text-xs text-muted-foreground">Hidden</span>
-                <Switch
-                  checked={newFaqVisible}
-                  onCheckedChange={setNewFaqVisible}
-                  aria-label="Toggle FAQ visibility on public site"
-                />
-                <span className="text-xs font-medium text-foreground">
-                  Visible on site
-                </span>
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="faqid">Update existing FAQ (optional)</Label>
-                <select
-                  id="faqid"
-                  className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
-                  value={updateFaqId}
-                  onChange={(e) => setUpdateFaqId(e.target.value)}
-                >
-                  <option value="">— Select —</option>
-                  {adminFaqs.map((f) => (
-                    <option key={f.id} value={f.id}>
-                      {f.question.slice(0, 72)}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                <Button type="button" variant="secondary" onClick={applyCreateFaq}>
-                  Create new FAQ
-                </Button>
-                <Button
-                  type="button"
-                  variant="secondary"
-                  disabled={!updateFaqId}
-                  onClick={applyUpdateFaq}
-                >
-                  Update existing FAQ
-                </Button>
-              </div>
-            </div>
-          )}
+
+          <SheetFooter className="border-t border-border/80 bg-muted/20 px-6 py-4">
+            <Button
+              type="button"
+              className="w-full"
+              disabled={saveBusy}
+              onClick={() => void saveJsonFile()}
+            >
+              {saveBusy ? "Saving…" : "Save — export public FAQs (JSON)"}
+            </Button>
+            {saveMsg && (
+              <p className="text-center text-xs text-muted-foreground">
+                {saveMsg}
+              </p>
+            )}
+          </SheetFooter>
         </SheetContent>
       </Sheet>
 
       <Separator className="my-10" />
 
-      <div className="space-y-3">
+      <div className="space-y-3 rounded-2xl border border-border/80 bg-card p-6 shadow-card">
         <h2 className="font-heading text-lg font-semibold text-[#003087]">
-          Save merged FAQs to JSON
+          Export public FAQs
         </h2>
         <p className="text-sm text-muted-foreground">
-          Writes public-visible FAQs to data/faqs.json in development (or when
-          ALLOW_FAQ_FILE_WRITE=true). Otherwise downloads a file.
+          Download or write merged visible FAQs for the site (same as Save in
+          the review panel).
         </p>
         <Button
           type="button"
           disabled={saveBusy}
           onClick={() => void saveJsonFile()}
         >
-          {saveBusy ? "Saving…" : "Save changes (export / write file)"}
+          {saveBusy ? "Saving…" : "Save — export public FAQs (JSON)"}
         </Button>
-        {saveMsg && <p className="text-sm text-muted-foreground">{saveMsg}</p>}
+        {saveMsg && !sheetOpen && (
+          <p className="text-sm text-muted-foreground">{saveMsg}</p>
+        )}
       </div>
     </div>
   );
