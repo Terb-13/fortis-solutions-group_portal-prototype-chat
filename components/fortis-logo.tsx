@@ -7,21 +7,21 @@ export function FortisLogo({ className }: { className?: string }) {
     <Link
       href="/"
       className={cn(
-        "flex items-center gap-3 rounded-md outline-none focus-visible:ring-2 focus-visible:ring-[#003087]/40",
+        "group flex min-w-0 items-center gap-3 rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-[#003087]/35",
         className,
       )}
     >
       <div
-        className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-[#003087] text-xs font-bold tracking-tighter text-white shadow-sm"
+        className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#003087] text-xs font-bold tracking-tight text-white shadow-md ring-1 ring-black/5 transition group-hover:shadow-lg"
         aria-hidden
       >
         FE
       </div>
-      <div className="text-left leading-tight">
-        <div className="text-sm font-semibold text-[#003087]">
+      <div className="min-w-0 text-left leading-tight">
+        <div className="truncate text-sm font-semibold text-[#003087] md:max-w-none">
           {FORTIS.company}
         </div>
-        <div className="text-xs font-medium text-muted-foreground">
+        <div className="hidden text-xs font-medium text-muted-foreground sm:block">
           Small Business Unit
         </div>
       </div>

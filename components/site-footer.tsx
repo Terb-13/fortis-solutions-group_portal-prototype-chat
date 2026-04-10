@@ -6,66 +6,70 @@ export function SiteFooter({ className }: { className?: string }) {
   return (
     <footer
       className={cn(
-        "border-t border-border bg-muted/40 text-sm text-muted-foreground",
+        "border-t border-border/60 bg-muted/30",
         className,
       )}
     >
-      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 md:grid-cols-2 md:px-6">
+      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-16 md:grid-cols-2 md:px-6">
         <div>
-          <p className="font-heading text-sm font-semibold text-foreground">
-            Resources
+          <p className="font-heading text-sm font-semibold text-[#003087]">
+            Explore
           </p>
-          <ul className="mt-4 space-y-2">
+          <ul className="mt-4 space-y-3 text-sm text-muted-foreground">
             <li>
-              <Link href="/customer-portal" className="hover:text-foreground">
-                Customer Portal overview
+              <Link
+                href="/customer-portal"
+                className="transition hover:text-[#003087]"
+              >
+                Customer Portal
               </Link>
             </li>
             <li>
-              <Link href="/timeline-roadmap" className="hover:text-foreground">
-                Timeline &amp; roadmap
+              <Link
+                href="/timeline-roadmap"
+                className="transition hover:text-[#003087]"
+              >
+                Timeline
               </Link>
             </li>
             <li>
-              <Link href="/faq" className="hover:text-foreground">
+              <Link href="/faq" className="transition hover:text-[#003087]">
                 FAQ
               </Link>
             </li>
             <li>
-              <Link href="/resources/brief" className="hover:text-foreground">
-                PDF stakeholder brief (demo)
+              <Link
+                href="/assistant"
+                className="transition hover:text-[#003087]"
+              >
+                Assistant
               </Link>
             </li>
             <li>
-              <Link href="/assistant" className="hover:text-foreground">
-                Fortis Edge Assistant (Grok)
-              </Link>
-            </li>
-            <li>
-              <Link href="/dashboard" className="hover:text-foreground">
-                Demo dashboard
+              <Link
+                href="/resources/brief"
+                className="transition hover:text-[#003087]"
+              >
+                Brief (PDF)
               </Link>
             </li>
           </ul>
         </div>
         <div>
-          <p className="font-heading text-sm font-semibold text-foreground">
+          <p className="font-heading text-sm font-semibold text-[#003087]">
             Contact
           </p>
-          <p className="mt-4 max-w-md text-pretty">
-            For Fortis Edge commercial questions, reach your Fortis Solutions
-            Group representative. This prototype illustrates portal positioning
-            for Tier 3 &amp; Tier 4 programs—confirm live capabilities with your
-            account team.
+          <p className="mt-4 max-w-md text-sm leading-relaxed text-muted-foreground">
+            Commercial questions: your Fortis representative. This site is a
+            Tier 3 &amp; 4 positioning prototype.
           </p>
-          <p className="mt-4 text-xs">
-            {FORTIS.company} · {FORTIS.tagline}
+          <p className="mt-6 text-xs text-muted-foreground">
+            {FORTIS.company}
           </p>
         </div>
       </div>
-      <div className="border-t border-border/80 py-4 text-center text-xs">
-        © {new Date().getFullYear()} {FORTIS.shortCompany}. Fortis Edge demo
-        prototype.
+      <div className="border-t border-border/60 py-5 text-center text-xs text-muted-foreground">
+        © {new Date().getFullYear()} {FORTIS.shortCompany} · Fortis Edge demo
       </div>
     </footer>
   );

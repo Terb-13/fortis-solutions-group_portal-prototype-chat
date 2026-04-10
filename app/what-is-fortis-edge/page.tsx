@@ -1,65 +1,84 @@
 import Image from "next/image";
-import { FORTIS, FORTIS_CORE_STORY_VERBATIM } from "@/lib/constants";
+import { Globe2, Layers, Rocket, Users } from "lucide-react";
+import { FORTIS } from "@/lib/constants";
 
 export const metadata = {
   title: `What is Fortis Edge? | ${FORTIS.productName}`,
   description: FORTIS.subhead,
 };
 
+const benefits = [
+  {
+    icon: Rocket,
+    title: "Built for speed",
+    text: "Digital HP lanes in Orem & Marietta for Tier 3 & 4 + low-quantity work.",
+  },
+  {
+    icon: Globe2,
+    title: "Portal-first",
+    text: "Self-service for routine tasks; enterprise story stays intact.",
+  },
+  {
+    icon: Layers,
+    title: "Phased roadmap",
+    text: "Proofing, FlexLink, split shipping—aligned to real plant readiness.",
+  },
+  {
+    icon: Users,
+    title: "1,100+ Fortis team",
+    text: "National footprint; solutions discipline you expect from Fortis.",
+  },
+] as const;
+
 export default function WhatIsFortisEdgePage() {
   return (
-    <div className="mx-auto max-w-4xl px-4 py-12 md:px-6">
-      <h1 className="font-heading text-3xl font-semibold text-[#003087] md:text-4xl">
-        What is Fortis Edge?
-      </h1>
-      <p className="mt-4 text-lg text-muted-foreground">{FORTIS.subhead}</p>
+    <div>
+      <section className="relative min-h-[min(70vh,520px)]">
+        <div className="absolute inset-0">
+          <Image
+            src="/images/plant-map.jpg"
+            alt=""
+            fill
+            priority
+            className="object-cover"
+            sizes="100vw"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-[#003087]/30" />
+        </div>
+        <div className="relative mx-auto flex min-h-[min(70vh,520px)] max-w-7xl flex-col justify-end px-4 pb-16 pt-28 md:px-6 md:pb-20">
+          <h1 className="max-w-3xl font-heading text-4xl font-semibold tracking-tight text-[#003087] md:text-5xl">
+            What is Fortis Edge?
+          </h1>
+          <p className="mt-4 max-w-2xl text-lg text-muted-foreground md:text-xl">
+            {FORTIS.subhead}
+          </p>
+          <p className="mt-6 max-w-2xl text-pretty text-muted-foreground">
+            The Small Business Unit for Tier 3 &amp; 4—digital plants plus a
+            modern portal without diluting Fortis quality or integrations.
+          </p>
+        </div>
+      </section>
 
-      <div className="mt-10 max-w-none space-y-6">
-        <h2 className="font-heading text-xl text-[#003087]">Definition</h2>
-        <p>
-          Fortis Edge is the Small Business Unit of Fortis Solutions Group,
-          purpose-built for Tier 3 and Tier 4 customers and low-quantity orders.
-          It connects dedicated digital speed plants—HP Digital Press capacity in{" "}
-          <strong>Orem, UT</strong> and <strong>Marietta, GA</strong>—with a
-          modern customer portal so routine work moves faster while Fortis
-          quality, color management, and solutions discipline stay intact.
-        </p>
-
-        <h2 className="font-heading mt-10 text-xl text-[#003087]">Why now</h2>
-        <p>
-          Small and emerging brands expect consumer-grade digital experiences.
-          Fortis Edge meets that expectation with transparent status, phased
-          roadmap delivery (proofing, FlexLink, split shipping), and integration
-          alignment to Radius, Infigo, and LabelTraxx—without diluting the Fortis
-          enterprise story.
-        </p>
-
-        <h2 className="font-heading mt-10 text-xl text-[#003087]">
-          Key stats (illustrative)
-        </h2>
-        <ul className="list-disc pl-6 text-muted-foreground">
-          <li>1,100+ Fortis team members nationwide</li>
-          <li>Strategic U.S. plant network including Orem &amp; Marietta digital lanes</li>
-          <li>Tier 3 &amp; 4 focus: higher changeover, smaller order profiles</li>
-        </ul>
-
-        <h2 className="font-heading mt-10 text-xl text-[#003087]">
-          Fortis core story (verbatim)
-        </h2>
-        <p className="text-muted-foreground">{FORTIS_CORE_STORY_VERBATIM}</p>
-      </div>
-
-      <div className="relative mt-12 aspect-[16/9] overflow-hidden rounded-xl border border-border bg-muted">
-        <Image
-          src="/images/plant-map.jpg"
-          alt="Plant map placeholder"
-          fill
-          className="object-cover"
-        />
-      </div>
-      <p className="mt-2 text-center text-xs text-muted-foreground">
-        Placeholder map — replace with approved geography / plant graphic.
-      </p>
+      <section className="section-y mx-auto max-w-7xl px-4 md:px-6">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {benefits.map(({ icon: Icon, title, text }) => (
+            <div
+              key={title}
+              className="rounded-2xl border border-border/80 bg-card p-6 shadow-card transition hover:-translate-y-0.5 hover:shadow-lg"
+            >
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#003087]/8 text-[#003087]">
+                <Icon className="size-6" strokeWidth={1.75} />
+              </div>
+              <h2 className="mt-4 font-heading text-lg font-semibold text-[#003087]">
+                {title}
+              </h2>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                {text}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
     </div>
   );
 }

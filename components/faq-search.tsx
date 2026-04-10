@@ -1,6 +1,13 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { Search } from "lucide-react";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Input } from "@/components/ui/input";
 import type { FaqItem } from "@/lib/faqs";
 
@@ -25,50 +32,61 @@ export function FaqSearch({
   }, [items, q]);
 
   return (
-    <div>
-      <div className="mx-auto max-w-xl">
+    <div className="space-y-8">
+      <div className="relative mx-auto max-w-xl">
+        <Search
+          className="pointer-events-none absolute left-3 top-1/2 size-5 -translate-y-1/2 text-muted-foreground"
+          aria-hidden
+        />
         <Input
           value={q}
           onChange={(e) => setQ(e.target.value)}
-          placeholder="Search questions, answers, or categories…"
-          className="h-11"
+          placeholder="Search FAQs…"
+          className="h-12 rounded-xl border-border/80 bg-card pl-11 shadow-sm"
         />
       </div>
-      <div className="mt-3 flex flex-wrap items-center justify-center gap-3 text-sm text-muted-foreground">
+      <div className="flex flex-wrap items-center justify-center gap-3 text-sm text-muted-foreground">
         <span>
-          Showing {filtered.length} of {items.length} entries
+          {filtered.length} of {items.length}
         </span>
         {onRefresh && (
           <button
             type="button"
-            className="text-[#003087] underline-offset-4 hover:underline"
+            className="font-medium text-[#00A651] underline-offset-4 hover:underline"
             onClick={() => onRefresh()}
           >
             Refresh
           </button>
         )}
       </div>
-      <ul className="mt-10 space-y-4">
+
+      <Accordion
+        multiple={false}
+        defaultValue={[]}
+        className="mx-auto max-w-3xl divide-y divide-border rounded-2xl border border-border/80 bg-card shadow-card"
+      >
         {filtered.map((f) => (
-          <li
-            key={f.id}
-            className="rounded-xl border border-border bg-card p-6 shadow-sm"
-          >
-            <p className="text-xs font-semibold uppercase tracking-wide text-[#F5A623]">
-              {f.category}
-            </p>
-            <h2 className="mt-2 font-heading text-lg font-semibold text-[#003087]">
-              {f.question}
-            </h2>
-            <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+          <AccordionItem key={f.id} value={f.id} className="border-0 px-1">
+            <AccordionTrigger className="px-5 py-5 text-left hover:no-underline">
+              <span className="flex flex-col gap-1 text-left">
+                <span className="text-xs font-bold uppercase tracking-wide text-[#00A651]">
+                  {f.category}
+                </span>
+                <span className="font-heading text-base font-semibold text-[#003087] md:text-lg">
+                  {f.question}
+                </span>
+              </span>
+            </AccordionTrigger>
+            <AccordionContent className="px-5 pb-5 pt-0 text-muted-foreground">
               {f.answer}
-            </p>
-          </li>
+            </AccordionContent>
+          </AccordionItem>
         ))}
-      </ul>
+      </Accordion>
+
       {filtered.length === 0 && (
-        <p className="mt-8 text-center text-muted-foreground">
-          No matches—try a shorter keyword.
+        <p className="text-center text-muted-foreground">
+          No matches—try another keyword.
         </p>
       )}
     </div>

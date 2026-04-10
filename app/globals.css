@@ -128,5 +128,62 @@
   }
   html {
     @apply font-sans;
+    scroll-behavior: smooth;
+  }
+}
+
+/* Fortis Edge brand tokens (use with arbitrary values or extend theme) */
+@layer utilities {
+  .section-y {
+    @apply py-16 md:py-24 lg:py-28;
+  }
+  .text-fortis-navy {
+    color: #003087;
+  }
+  .bg-fortis-green {
+    background-color: #00a651;
+  }
+  .text-fortis-green {
+    color: #00a651;
+  }
+  .shadow-card {
+    box-shadow:
+      0 1px 2px rgb(0 48 135 / 0.04),
+      0 8px 24px rgb(0 48 135 / 0.06);
+  }
+  .shadow-card-hover {
+    @apply transition-all duration-300 ease-out;
+  }
+  .shadow-card-hover:hover {
+    box-shadow:
+      0 4px 12px rgb(0 48 135 / 0.08),
+      0 16px 40px rgb(0 48 135 / 0.1);
+    transform: translateY(-2px);
+  }
+  .animate-fade-up {
+    animation: fortis-fade-up 0.55s ease-out both;
+  }
+  .animate-marquee {
+    animation: fortis-marquee 28s linear infinite;
+  }
+}
+
+@keyframes fortis-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fortis-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
   }
 }

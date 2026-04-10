@@ -10,84 +10,76 @@ export const metadata = {
     "Phase 2 milestones: FlexLink, online proofing, split shipping, integrations.",
 };
 
-const year = 2026;
-const jan1 = new Date(year, 0, 1).getTime();
-const dec31 = new Date(year, 11, 31).getTime();
-
-function barForDate(isoDate: string) {
-  const t = new Date(isoDate).getTime();
-  const p = ((t - jan1) / (dec31 - jan1)) * 100;
-  const left = Math.min(92, Math.max(2, p));
-  return { marginLeft: `${left}%`, width: "18%" };
-}
+const phase2 = [
+  { label: "Online proofing (Orem)", date: "Mar 1, 2026" },
+  { label: "FlexLink", date: "Mar 15, 2026" },
+  { label: "Split shipping", date: "Apr 30, 2026" },
+  { label: "April portal update", date: "Live" },
+] as const;
 
 export default function TimelineRoadmapPage() {
   const portal = getPortalContent();
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-12 md:px-6">
-      <h1 className="font-heading text-3xl font-semibold text-[#003087] md:text-4xl">
-        Timeline &amp; Roadmap
-      </h1>
-      <p className="mt-4 max-w-3xl text-muted-foreground">
-        Gantt-style view for {year} program targets. Dates are directional—align
-        with your Fortis Edge contact for account readiness.
-      </p>
+    <div className="section-y mx-auto max-w-7xl px-4 md:px-6">
+      <div className="mx-auto max-w-2xl text-center">
+        <h1 className="font-heading text-4xl font-semibold text-[#003087] md:text-5xl">
+          Timeline &amp; roadmap
+        </h1>
+        <p className="mt-4 text-muted-foreground">
+          Directional dates—confirm with your Fortis Edge contact.
+        </p>
+      </div>
 
-      <div className="mt-10 rounded-xl border bg-card p-6">
-        <div className="mb-6 flex justify-between text-xs font-medium text-muted-foreground">
-          <span>Jan</span>
-          <span>Apr</span>
-          <span>Jul</span>
-          <span>Oct</span>
-          <span>Dec</span>
-        </div>
-        <div className="space-y-5">
-          {portal.milestones.map((m) => (
-            <div key={m.name}>
-              <div className="mb-1 flex flex-wrap items-baseline justify-between gap-2 text-sm">
-                <span className="font-medium text-foreground">{m.name}</span>
-                <span className="text-xs text-muted-foreground">{m.date}</span>
-              </div>
-              <div className="relative h-9 rounded-md bg-muted">
+      <div className="mt-16 overflow-x-auto pb-4">
+        <div className="relative mx-auto min-w-[720px] max-w-5xl px-4">
+          <div className="absolute left-8 right-8 top-7 h-0.5 bg-border md:left-12 md:right-12" />
+          <div className="relative flex justify-between gap-2">
+            {portal.milestones.map((m) => (
+              <div
+                key={m.name}
+                className="flex max-w-[22%] flex-col items-center text-center"
+              >
                 <div
                   className={cn(
-                    "absolute top-1/2 h-6 -translate-y-1/2 rounded-md",
-                    m.type === "live" ? "bg-[#00A651]" : "bg-[#003087]",
+                    "relative z-10 flex h-14 w-14 items-center justify-center rounded-full border-4 border-background text-xs font-bold shadow-md",
+                    m.type === "live"
+                      ? "bg-[#00A651] text-white"
+                      : "bg-[#003087] text-white",
                   )}
-                  style={barForDate(m.date)}
-                />
+                >
+                  {m.type === "live" ? "✓" : "→"}
+                </div>
+                <p className="mt-4 text-xs font-semibold leading-snug text-[#003087]">
+                  {m.name}
+                </p>
+                <p className="mt-1 text-xs text-muted-foreground">{m.date}</p>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
 
-      <h2 className="font-heading mt-14 text-2xl font-semibold text-[#003087]">
-        Phase 2 milestone list
-      </h2>
-      <ul className="mt-4 list-inside list-disc space-y-2 text-muted-foreground">
-        <li>Online proofing — March 1, 2026 (Orem target)</li>
-        <li>FlexLink — March 15, 2026 target</li>
-        <li>Split shipping — April 30, 2026 target</li>
-        <li>April 2026 portal update — live</li>
-      </ul>
-
-      <div className="mt-10 rounded-xl border border-dashed bg-muted/30 p-6">
-        <p className="font-medium text-foreground">Phase 2 Project Plan</p>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Attach your internal Phase 2 project plan (PDF / Confluence) for
-          stakeholders. This page stays synchronized with Customer Portal
-          milestones.
-        </p>
+      <div className="mx-auto mt-16 max-w-3xl rounded-2xl border border-dashed border-[#003087]/25 bg-[#003087]/[0.03] p-8 text-center">
+        <h2 className="font-heading text-lg font-semibold text-[#003087]">
+          Phase 2 at a glance
+        </h2>
+        <ul className="mt-4 flex flex-wrap justify-center gap-x-8 gap-y-2 text-sm text-muted-foreground">
+          {phase2.map((x) => (
+            <li key={x.label}>
+              <span className="font-medium text-foreground">{x.label}</span> —{" "}
+              {x.date}
+            </li>
+          ))}
+        </ul>
         <Link
           href="/customer-portal"
           className={cn(
             buttonVariants({ variant: "link" }),
-            "mt-2 h-auto px-0",
+            "mt-4 h-auto text-[#00A651]",
           )}
         >
-          View portal architecture &amp; integrations →
+          Portal detail →
         </Link>
       </div>
     </div>

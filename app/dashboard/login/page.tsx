@@ -35,40 +35,43 @@ export default function DashboardLoginPage() {
   }
 
   return (
-    <div className="mx-auto flex max-w-md flex-col gap-8 px-4 py-20 md:px-6">
-      <div>
-        <h1 className="font-heading text-2xl font-semibold text-[#003087]">
-          Dashboard sign-in
+    <div className="flex min-h-[70vh] items-center justify-center px-4 py-16 md:px-6">
+      <div className="w-full max-w-md rounded-2xl border border-border/80 bg-card p-8 shadow-card md:p-10">
+        <p className="text-xs font-bold uppercase tracking-wide text-[#00A651]">
+          Team
+        </p>
+        <h1 className="mt-2 font-heading text-2xl font-semibold text-[#003087]">
+          Sign in
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Demo password access for {FORTIS.productName} conversation history and
-          FAQ tools.
+          {FORTIS.productName} dashboard (demo).
         </p>
+        <form onSubmit={onSubmit} className="mt-8 space-y-4">
+          <div className="grid gap-2">
+            <Label htmlFor="password">Password</Label>
+            <Input
+              id="password"
+              type="password"
+              autoComplete="current-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="h-11"
+            />
+          </div>
+          {error && (
+            <p className="text-sm text-destructive" role="alert">
+              {error}
+            </p>
+          )}
+          <Button
+            type="submit"
+            disabled={busy}
+            className="h-11 w-full bg-[#003087] font-semibold text-white hover:bg-[#003087]/90"
+          >
+            {busy ? "Signing in…" : "Continue"}
+          </Button>
+        </form>
       </div>
-      <form onSubmit={onSubmit} className="space-y-4">
-        <div className="grid gap-2">
-          <Label htmlFor="password">Password</Label>
-          <Input
-            id="password"
-            type="password"
-            autoComplete="current-password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-        {error && (
-          <p className="text-sm text-destructive" role="alert">
-            {error}
-          </p>
-        )}
-        <Button
-          type="submit"
-          disabled={busy}
-          className="w-full bg-[#003087] text-white hover:bg-[#003087]/90"
-        >
-          {busy ? "Signing in…" : "Sign in"}
-        </Button>
-      </form>
     </div>
   );
 }

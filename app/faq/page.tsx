@@ -3,20 +3,24 @@ import { FORTIS } from "@/lib/constants";
 
 export const metadata = {
   title: `FAQ | ${FORTIS.productName}`,
-  description: "Searchable Fortis Edge FAQs for Tier 3 & 4 programs and the portal.",
+  description:
+    "Searchable Fortis Edge FAQs for Tier 3 & 4 programs and the portal.",
 };
 
 export default function FaqPage() {
   return (
-    <div className="mx-auto max-w-3xl px-4 py-12 md:px-6">
-      <h1 className="font-heading text-3xl font-semibold text-[#003087] md:text-4xl">
-        Frequently asked questions
-      </h1>
-      <p className="mt-4 text-muted-foreground">
-        Seeded with eight canonical themes (expandable to 15+). Dashboard
-        overrides apply when you publish from the FAQ builder.
-      </p>
-      <FaqPageClient />
+    <div className="section-y mx-auto max-w-4xl px-4 md:px-6">
+      <div className="mx-auto max-w-2xl text-center">
+        <h1 className="font-heading text-4xl font-semibold text-[#003087] md:text-5xl">
+          FAQ
+        </h1>
+        <p className="mt-4 text-muted-foreground">
+          Searchable answers—dashboard publishes override the public list.
+        </p>
+      </div>
+      <div className="mt-14">
+        <FaqPageClient />
+      </div>
     </div>
   );
 }

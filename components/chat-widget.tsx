@@ -24,7 +24,7 @@ export function ChatWidget() {
       <SheetTrigger
         className={cn(
           buttonVariants({ size: "icon-lg" }),
-          "fixed bottom-6 right-6 z-50 h-14 w-14 rounded-full border-0 bg-[#003087] p-0 text-white shadow-lg hover:bg-[#003087]/90",
+          "fixed bottom-6 right-6 z-50 h-14 w-14 rounded-full border-0 bg-[#003087] p-0 text-white shadow-[0_8px_30px_rgba(0,48,135,0.35)] ring-2 ring-[#00A651]/30 transition hover:scale-[1.03] hover:bg-[#003087]/95",
         )}
         aria-label="Open Fortis Edge Assistant chat"
       >

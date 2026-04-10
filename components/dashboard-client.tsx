@@ -256,16 +256,18 @@ export function DashboardClient() {
   };
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-12 md:px-6">
-      <div className="flex flex-wrap items-start justify-between gap-4">
+    <div className="mx-auto max-w-6xl px-4 py-12 md:px-6 md:py-16">
+      <div className="flex flex-wrap items-start justify-between gap-4 rounded-2xl border border-border/80 bg-card p-6 shadow-card md:p-8">
         <div>
-          <h1 className="font-heading text-3xl font-semibold text-[#003087]">
-            Advanced conversation review &amp; FAQ builder
+          <p className="text-xs font-bold uppercase tracking-wide text-[#00A651]">
+            Team
+          </p>
+          <h1 className="mt-1 font-heading text-2xl font-semibold text-[#003087] md:text-3xl">
+            Conversations &amp; FAQ builder
           </h1>
-          <p className="mt-2 text-muted-foreground">
-            {FORTIS.productName} — local browser storage for conversations and
-            FAQ overrides. Export saves merged public FAQs; dev can write
-            data/faqs.json directly.
+          <p className="mt-2 max-w-xl text-sm text-muted-foreground">
+            {FORTIS.productName} — stored in-browser. Export merges public FAQs;
+            dev can write <code className="text-xs">data/faqs.json</code>.
           </p>
         </div>
         <Button variant="outline" onClick={() => void logout()}>
@@ -273,9 +275,9 @@ export function DashboardClient() {
         </Button>
       </div>
 
-      <Separator className="my-8" />
+      <Separator className="my-10" />
 
-      <div className="space-y-3 rounded-xl border border-dashed bg-muted/30 p-4">
+      <div className="space-y-3 rounded-2xl border border-dashed border-[#003087]/20 bg-[#003087]/[0.03] p-5 md:p-6">
         <p className="text-sm font-medium text-foreground">Bulk transcript</p>
         <p className="text-xs text-muted-foreground">
           Analyze all saved conversations and add suggested FAQs (visible).
@@ -296,16 +298,16 @@ export function DashboardClient() {
         )}
       </div>
 
-      <Separator className="my-8" />
+      <Separator className="my-10" />
 
       {!selectedId ? (
         <div>
           <h2 className="font-heading text-lg font-semibold text-[#003087]">
             Conversations
           </h2>
-          <div className="mt-4 overflow-x-auto rounded-xl border">
+          <div className="mt-4 overflow-x-auto rounded-2xl border border-border/80 shadow-card">
             <table className="w-full min-w-[640px] text-left text-sm">
-              <thead className="bg-muted/80">
+              <thead className="bg-[#003087] text-white">
                 <tr>
                   <th className="p-3 font-semibold">Updated</th>
                   <th className="p-3 font-semibold">Preview</th>
@@ -313,7 +315,7 @@ export function DashboardClient() {
                   <th className="p-3 font-semibold">Messages</th>
                 </tr>
               </thead>
-              <tbody className="divide-y">
+              <tbody className="divide-y divide-border bg-card">
                 {rows.length === 0 ? (
                   <tr>
                     <td colSpan={4} className="p-6 text-muted-foreground">
@@ -324,7 +326,7 @@ export function DashboardClient() {
                   rows.map((r) => (
                     <tr
                       key={r.id}
-                      className="cursor-pointer hover:bg-muted/50"
+                      className="cursor-pointer transition hover:bg-muted/50"
                       onClick={() => {
                         setSelectedId(r.id);
                         setSelectedMessageId(null);
@@ -378,7 +380,7 @@ export function DashboardClient() {
           <h2 className="font-heading text-lg font-semibold text-[#003087]">
             Thread
           </h2>
-          <ScrollArea className="h-[min(520px,60vh)] rounded-xl border p-4">
+          <ScrollArea className="h-[min(520px,60vh)] rounded-2xl border border-border/80 bg-card p-4 shadow-inner">
             <div className="space-y-3 pr-4">
               {selected?.messages.map((m) =>
                 m.role === "assistant" ? (
@@ -424,9 +426,11 @@ export function DashboardClient() {
       )}
 
       <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
-        <SheetContent className="flex w-full flex-col gap-4 overflow-y-auto sm:max-w-lg">
+        <SheetContent className="flex w-full flex-col gap-4 overflow-y-auto border-l-[#003087]/10 sm:max-w-lg">
           <SheetHeader>
-            <SheetTitle>Review assistant message</SheetTitle>
+            <SheetTitle className="font-heading text-[#003087]">
+              Flag for review
+            </SheetTitle>
             <SheetDescription>
               Add a correction note, run Grok to propose an improved reply and
               FAQ update, then apply actions.
