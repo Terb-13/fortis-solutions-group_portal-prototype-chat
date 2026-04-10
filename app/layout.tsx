@@ -19,7 +19,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: `${FORTIS.productName} | ${FORTIS.company}`,
-  description: FORTIS.tagline,
+  description: `${FORTIS.tagline} ${FORTIS.subhead}`,
 };
 
 export default function RootLayout({
