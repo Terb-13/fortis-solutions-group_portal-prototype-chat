@@ -1,0 +1,104 @@
+[
+  {
+    "id": "ps-labels",
+    "name": "Pressure-sensitive labels",
+    "shortDescription": "Digital HP lanes — Orem & Marietta — for Tier 3 & 4 programs.",
+    "image": "/images/pressure-sensitive-labels.jpg",
+    "renewEligible": true,
+    "includes": [
+      "HP Digital Press production paths",
+      "Color management aligned to Fortis standards",
+      "Portal-first request & status where enabled"
+    ],
+    "specs": [
+      "Formats: roll labels, prime labels (program-dependent)",
+      "Plants: Orem, UT · Marietta, GA",
+      "Scope: confirm SKU and art with your Fortis contact"
+    ]
+  },
+  {
+    "id": "renew",
+    "name": "Renew™ sustainable",
+    "shortDescription": "Wash-off, recyclable, and circular-economy-forward options.",
+    "image": "/images/renew-badge.png",
+    "renewEligible": true,
+    "includes": [
+      "Renew™ constructions where program-qualified",
+      "Sustainability narrative for shelf & ESG reporting",
+      "Coordinated with your Fortis solutions team"
+    ],
+    "specs": [
+      "Availability varies by substrate and line",
+      "Label format must match approved Renew constructions",
+      "Ask Fortis for current Renew™ lineup for your SKU"
+    ]
+  },
+  {
+    "id": "shrink",
+    "name": "Shrink sleeves",
+    "shortDescription": "Full Fortis catalog — scoped with your account team.",
+    "image": "/images/before-after-card.jpg",
+    "renewEligible": false,
+    "includes": [
+      "Program design and artwork support",
+      "Plant routing per Fortis network",
+      "Integration with your packaging line requirements"
+    ],
+    "specs": [
+      "Not in initial Fortis Edge portal digital-only scope",
+      "Lead times and MOQs by program",
+      "Contact Fortis for shrink scope on your brand"
+    ]
+  },
+  {
+    "id": "flex",
+    "name": "Flexible packaging",
+    "shortDescription": "Pouches, films, and flex formats — enterprise-led programs.",
+    "image": "/images/orem-marietta-press.jpg",
+    "renewEligible": false,
+    "includes": [
+      "Material and barrier consultation",
+      "Print and finishing per Fortis capabilities",
+      "Quality and compliance documentation as required"
+    ],
+    "specs": [
+      "Portal: roadmap for digital paths; confirm with Fortis",
+      "MOQ and tooling by construction",
+      "Regional plant alignment per program"
+    ]
+  },
+  {
+    "id": "cartons",
+    "name": "Folding cartons",
+    "shortDescription": "Cartons and paperboard — national Fortis footprint.",
+    "image": "/images/fortis-edge-hero.jpg",
+    "renewEligible": false,
+    "includes": [
+      "Structural design collaboration",
+      "Print and coatings per brand standards",
+      "Fulfillment handoff with your supply chain"
+    ],
+    "specs": [
+      "Not digital-only in initial Edge portal scope",
+      "Lead times by plant and seasonality",
+      "RFP through Fortis or portal where enabled"
+    ]
+  },
+  {
+    "id": "applicators",
+    "name": "Applicators & extended content",
+    "shortDescription": "Line equipment and booklet / extended-content labels.",
+    "image": "/images/plant-map.jpg",
+    "renewEligible": false,
+    "includes": [
+      "Applicator fit-up with label construction",
+      "Extended content and booklet options where supported",
+      "Technical support for line trials"
+    ],
+    "specs": [
+      "Equipment quotes separate from label PO where applicable",
+      "Confirm line speed and web path with Fortis",
+      "Integration milestones vary by account"
+    ]
+  }
+]
