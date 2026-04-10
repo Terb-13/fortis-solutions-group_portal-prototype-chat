@@ -18,25 +18,32 @@ export default function ExplorerPage() {
           Packaging solutions explorer
         </h1>
         <p className="text-muted-foreground">
-          Select a format to review specifications, RENEW™ indicators, and add
-          items to your quote. No line layouts or conveyor visuals—just clear
+          Select a format to review specifications and RENEW™ indicators—clear
           product detail for stakeholder-ready conversations.
         </p>
       </div>
       <ProductExplorerClient products={products} />
       <div className="mt-12 flex flex-wrap items-center justify-between gap-4 rounded-xl border border-dashed border-border bg-muted/30 p-6">
         <div>
-          <p className="font-medium text-foreground">Ready for a formal quote?</p>
+          <p className="font-medium text-foreground">Ready to move forward?</p>
           <p className="text-sm text-muted-foreground">
-            Carry your selections into the branded proposal generator.
+            Use the customer portal for next steps, or download the Edge brief.
           </p>
         </div>
-        <Link
-          href="/proposal"
-          className="text-sm font-semibold text-[#003087] underline-offset-4 hover:underline"
-        >
-          Open proposal form →
-        </Link>
+        <div className="flex flex-wrap gap-4">
+          <Link
+            href="/customer-portal"
+            className="text-sm font-semibold text-[#003087] underline-offset-4 hover:underline"
+          >
+            Customer portal →
+          </Link>
+          <Link
+            href="/resources/brief"
+            className="text-sm font-semibold text-[#003087] underline-offset-4 hover:underline"
+          >
+            Edge brief PDF →
+          </Link>
+        </div>
       </div>
     </div>
   );

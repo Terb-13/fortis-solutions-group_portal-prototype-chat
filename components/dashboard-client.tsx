@@ -248,7 +248,10 @@ export function DashboardClient() {
     }
   }
 
-  const adminFaqs = useMemo(() => getAllFaqsForAdmin(), [faqTick]);
+  const adminFaqs = useMemo(() => {
+    void faqTick;
+    return getAllFaqsForAdmin();
+  }, [faqTick]);
 
   const logout = async () => {
     await fetch("/api/auth/logout", { method: "POST" });

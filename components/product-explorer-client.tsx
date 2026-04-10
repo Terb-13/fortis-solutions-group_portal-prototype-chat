@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 import { RenewBadge } from "@/components/renew-badge";
 import { Button } from "@/components/ui/button";
@@ -21,11 +22,9 @@ import {
 } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import type { Product } from "@/lib/products";
-import { useQuote } from "@/lib/quote-context";
 
 export function ProductExplorerClient({ products }: { products: Product[] }) {
   const [openId, setOpenId] = useState<string | null>(null);
-  const { addProduct } = useQuote();
   const active = products.find((p) => p.id === openId) ?? null;
 
   return (
@@ -68,9 +67,9 @@ export function ProductExplorerClient({ products }: { products: Product[] }) {
               </Button>
               <Button
                 className="flex-1 bg-[#003087] text-white hover:bg-[#003087]/90"
-                onClick={() => addProduct(p)}
+                asChild
               >
-                Add to quote
+                <Link href="/customer-portal">Next steps</Link>
               </Button>
             </CardFooter>
           </Card>
@@ -124,12 +123,9 @@ export function ProductExplorerClient({ products }: { products: Product[] }) {
               )}
               <Button
                 className="w-full bg-[#003087] text-white hover:bg-[#003087]/90"
-                onClick={() => {
-                  addProduct(active);
-                  setOpenId(null);
-                }}
+                asChild
               >
-                Add to quote
+                <Link href="/customer-portal">Portal &amp; contact</Link>
               </Button>
             </>
           )}
