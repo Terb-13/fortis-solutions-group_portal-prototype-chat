@@ -41,7 +41,8 @@ export default function DashboardLoginPage() {
           Dashboard sign-in
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Demo password access for {FORTIS.productName} conversation tools.
+          Demo password access for {FORTIS.productName} conversation history and
+          FAQ tools.
         </p>
       </div>
       <form onSubmit={onSubmit} className="space-y-4">

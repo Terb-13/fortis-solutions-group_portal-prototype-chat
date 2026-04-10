@@ -1,0 +1,24 @@
+import { FaqSearch } from "@/components/faq-search";
+import { FORTIS } from "@/lib/constants";
+import { getFaqs } from "@/lib/faqs";
+
+export const metadata = {
+  title: `FAQ | ${FORTIS.productName}`,
+  description: "Searchable Fortis Edge FAQs for Tier 3 & 4 programs and the portal.",
+};
+
+export default function FaqPage() {
+  const items = getFaqs();
+  return (
+    <div className="mx-auto max-w-3xl px-4 py-12 md:px-6">
+      <h1 className="font-heading text-3xl font-semibold text-[#003087] md:text-4xl">
+        Frequently asked questions
+      </h1>
+      <p className="mt-4 text-muted-foreground">
+        Seeded for Fortis Edge positioning, portal capabilities, roadmap dates,
+        and integrations. Expand with your program office as releases progress.
+      </p>
+      <FaqSearch items={items} />
+    </div>
+  );
+}

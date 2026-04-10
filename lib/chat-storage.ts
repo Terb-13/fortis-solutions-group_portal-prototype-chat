@@ -12,7 +12,7 @@ export type ConversationRecord = {
   messages: StoredMessage[];
 };
 
-const KEY = "fortis-packaging-assistant-conversations";
+const KEY = "fortis-edge-assistant-conversations";
 
 function safeParse(raw: string | null): ConversationRecord[] {
   if (!raw) return [];
@@ -57,13 +57,15 @@ export function appendCustomFaqs(entries: { question: string; answer: string }[]
     })),
     ...existing,
   ];
-  localStorage.setItem("fortis-custom-faqs", JSON.stringify(next));
+  localStorage.setItem("fortis-edge-custom-faqs", JSON.stringify(next));
 }
 
 export function loadCustomFaqs(): { id: string; question: string; answer: string }[] {
   if (typeof window === "undefined") return [];
   try {
-    const raw = localStorage.getItem("fortis-custom-faqs");
+    const raw =
+      localStorage.getItem("fortis-edge-custom-faqs") ??
+      localStorage.getItem("fortis-custom-faqs");
     if (!raw) return [];
     return JSON.parse(raw) as { id: string; question: string; answer: string }[];
   } catch {

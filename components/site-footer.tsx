@@ -10,28 +10,62 @@ export function SiteFooter({ className }: { className?: string }) {
         className,
       )}
     >
-      <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-10 md:flex-row md:items-start md:justify-between md:px-6">
-        <div className="max-w-md space-y-2">
-          <p className="font-semibold text-foreground">{FORTIS.company}</p>
-          <p className="text-balance">{FORTIS.tagline}</p>
+      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 md:grid-cols-2 md:px-6">
+        <div>
+          <p className="font-heading text-sm font-semibold text-foreground">
+            Resources
+          </p>
+          <ul className="mt-4 space-y-2">
+            <li>
+              <Link href="/customer-portal" className="hover:text-foreground">
+                Customer Portal overview
+              </Link>
+            </li>
+            <li>
+              <Link href="/timeline-roadmap" className="hover:text-foreground">
+                Timeline &amp; roadmap
+              </Link>
+            </li>
+            <li>
+              <Link href="/faq" className="hover:text-foreground">
+                FAQ
+              </Link>
+            </li>
+            <li>
+              <Link href="/resources/brief" className="hover:text-foreground">
+                PDF stakeholder brief (demo)
+              </Link>
+            </li>
+            <li>
+              <Link href="/assistant" className="hover:text-foreground">
+                Fortis Edge Assistant (Grok)
+              </Link>
+            </li>
+            <li>
+              <Link href="/dashboard" className="hover:text-foreground">
+                Demo dashboard
+              </Link>
+            </li>
+          </ul>
         </div>
-        <div className="flex flex-wrap gap-x-6 gap-y-2">
-          <Link href="/explorer" className="hover:text-foreground">
-            Product explorer
-          </Link>
-          <Link href="/assistant" className="hover:text-foreground">
-            Packaging Assistant
-          </Link>
-          <Link href="/proposal" className="hover:text-foreground">
-            Proposal
-          </Link>
-          <Link href="/dashboard/login" className="hover:text-foreground">
-            Dashboard
-          </Link>
+        <div>
+          <p className="font-heading text-sm font-semibold text-foreground">
+            Contact
+          </p>
+          <p className="mt-4 max-w-md text-pretty">
+            For Fortis Edge commercial questions, reach your Fortis Solutions
+            Group representative. This prototype illustrates portal positioning
+            for Tier 3 &amp; Tier 4 programs—confirm live capabilities with your
+            account team.
+          </p>
+          <p className="mt-4 text-xs">
+            {FORTIS.company} · {FORTIS.tagline}
+          </p>
         </div>
       </div>
       <div className="border-t border-border/80 py-4 text-center text-xs">
-        © {new Date().getFullYear()} {FORTIS.company}. Demo prototype.
+        © {new Date().getFullYear()} {FORTIS.shortCompany}. Fortis Edge demo
+        prototype.
       </div>
     </footer>
   );

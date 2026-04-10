@@ -2,9 +2,9 @@ import { ChatPanel } from "@/components/chat-panel";
 import { FORTIS } from "@/lib/constants";
 
 export const metadata = {
-  title: `Packaging Assistant | ${FORTIS.productName}`,
+  title: `Fortis Edge Assistant | ${FORTIS.productName}`,
   description:
-    "Grok-powered Fortis Packaging Assistant for labels, sleeves, flexible packaging, cartons, and sustainability.",
+    "Grok-powered assistant for Fortis Edge Tier 3 & 4 programs, portal capabilities, and roadmap.",
 };
 
 export default function AssistantPage() {
@@ -12,12 +12,12 @@ export default function AssistantPage() {
     <div className="mx-auto max-w-3xl px-4 py-12 md:px-6">
       <div className="mb-8 space-y-2">
         <h1 className="font-heading text-3xl font-semibold tracking-tight text-[#003087]">
-          Packaging Assistant
+          Fortis Edge Assistant
         </h1>
         <p className="text-muted-foreground">
-          Powered by Grok (xAI) with Fortis positioning, product coverage, portal
-          themes, and Gold Seal / CTM applicator context. Use the floating widget
-          on any page for the same conversation.
+          Powered by Grok (xAI) with Fortis Edge definitions, portal brief
+          themes, Tier 3 &amp; 4 guidance, integrations, and roadmap dates.
+          The floating widget on every page continues this same conversation.
         </p>
       </div>
       <ChatPanel />

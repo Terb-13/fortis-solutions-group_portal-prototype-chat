@@ -93,11 +93,11 @@ export default function DashboardPage() {
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <h1 className="font-heading text-3xl font-semibold text-[#003087]">
-            Demo dashboard
+            Fortis Edge demo dashboard
           </h1>
           <p className="mt-2 text-muted-foreground">
-            Conversation history from the Packaging Assistant (stored locally in
-            this browser) and Grok-powered FAQ drafting.
+            Conversation history from the Fortis Edge Assistant (stored locally
+            in this browser) and Grok-powered FAQ drafting.
           </p>
         </div>
         <Button variant="outline" onClick={() => void logout()}>
@@ -142,8 +142,9 @@ export default function DashboardPage() {
           <ScrollArea className="mt-4 h-[min(420px,50vh)] rounded-xl border border-border p-4">
             {rows.length === 0 ? (
               <p className="text-sm text-muted-foreground">
-                No saved conversations yet. Chat with the assistant, then return
-                here—history updates after each assistant reply completes.
+                No saved conversations yet. Chat with the Fortis Edge Assistant,
+                then return here—history updates after each assistant reply
+                completes.
               </p>
             ) : (
               <ul className="space-y-6">

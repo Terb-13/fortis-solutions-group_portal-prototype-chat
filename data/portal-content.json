@@ -1,0 +1,79 @@
+{
+  "tierComparison": [
+    {
+      "dimension": "Primary focus",
+      "tier12": "Enterprise-scale programs, national brands, deep integration",
+      "tier34": "Tier 3 & 4 brands, low-quantity, high-changeover digital workflows"
+    },
+    {
+      "dimension": "Workflow style",
+      "tier12": "Multi-system orchestration, dedicated account operations",
+      "tier34": "Portal-first self-service for routine tasks; assisted for exceptions"
+    },
+    {
+      "dimension": "Digital plants",
+      "tier12": "Full Fortis network as program dictates",
+      "tier34": "Orem + Marietta HP Digital Press speed lanes for Edge scope"
+    },
+    {
+      "dimension": "Proofing & collaboration",
+      "tier12": "Established proofing programs per account",
+      "tier34": "Online proofing rollout (Orem target Mar 1, 2026) + transparent status"
+    }
+  ],
+  "liveFeaturesApril2026": [
+    "April 2026 portal update live",
+    "Improved order visibility for enabled accounts",
+    "Digital request paths for estimates / RFP where toggled on",
+    "Self-service knowledge base alignment to Fortis Edge FAQs"
+  ],
+  "roadmapPhases": [
+    {
+      "phase": "Phase 1",
+      "window": "Live",
+      "highlights": ["Portal foundation", "Tier 3/4 onboarding paths", "Core order visibility"]
+    },
+    {
+      "phase": "Phase 2",
+      "window": "Q1–Q2 2026 targets",
+      "highlights": [
+        "Online proofing — Mar 1, 2026 (Orem target)",
+        "FlexLink — Mar 15 target",
+        "Split shipping — Apr 30 target",
+        "Radius / Infigo / LabelTraxx integration waves"
+      ]
+    },
+    {
+      "phase": "Phase 3",
+      "window": "Planning",
+      "highlights": [
+        "Expanded SKU self-service",
+        "Deeper plant system automation",
+        "Additional integration maturity"
+      ]
+    }
+  ],
+  "integrations": [
+    {
+      "system": "Radius",
+      "status": "In discovery / blueprint",
+      "notes": "MIS connectivity for estimates-to-production handoff"
+    },
+    {
+      "system": "Infigo",
+      "status": "Integration scoping",
+      "notes": "Web-to-print alignment for supported Edge journeys"
+    },
+    {
+      "system": "LabelTraxx",
+      "status": "Roadmap alignment",
+      "notes": "Production workflow synchronization for digital plants"
+    }
+  ],
+  "milestones": [
+    { "name": "Online proofing (Orem)", "date": "2026-03-01", "type": "target" },
+    { "name": "FlexLink", "date": "2026-03-15", "type": "target" },
+    { "name": "Split shipping", "date": "2026-04-30", "type": "target" },
+    { "name": "April 2026 portal update", "date": "2026-04-01", "type": "live" }
+  ]
+}

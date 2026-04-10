@@ -26,7 +26,7 @@ export function ChatWidget() {
           buttonVariants({ size: "icon-lg" }),
           "fixed bottom-6 right-6 z-50 h-14 w-14 rounded-full border-0 bg-[#003087] p-0 text-white shadow-lg hover:bg-[#003087]/90",
         )}
-        aria-label="Open Packaging Assistant chat"
+        aria-label="Open Fortis Edge Assistant chat"
       >
         <MessageCircle className="h-6 w-6" />
       </SheetTrigger>
@@ -38,9 +38,10 @@ export function ChatWidget() {
         <SheetHeader className="border-b border-border px-6 py-4 text-left">
           <div className="flex items-start justify-between gap-2">
             <div>
-              <SheetTitle>{FORTIS.productName}</SheetTitle>
+              <SheetTitle>{FORTIS.productName} Assistant</SheetTitle>
               <SheetDescription>
-                Grok-powered guidance for Fortis packaging programs.
+                Grok-powered guidance for Tier 3 &amp; 4 programs, portal
+                workflows, and roadmap timing.
               </SheetDescription>
             </div>
             <Button

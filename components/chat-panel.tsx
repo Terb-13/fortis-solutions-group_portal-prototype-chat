@@ -71,9 +71,9 @@ export function ChatPanel({
         <div className="flex flex-col gap-3 pr-2">
           {messages.length === 0 && (
             <p className="text-sm text-muted-foreground">
-              Ask about pressure-sensitive labels, shrink sleeves, flexible
-              packaging, folding cartons, RENEW™ sustainability, or Gold Seal
-              and CTM applicators.
+            Ask about Fortis Edge, Orem/Marietta digital plants, Tier 3 &amp;
+            4 portal paths, proofing targets, FlexLink, split shipping, or
+            Radius / Infigo / LabelTraxx.
             </p>
           )}
           {messages.map((m) => (

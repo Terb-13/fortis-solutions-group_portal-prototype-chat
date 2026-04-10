@@ -13,8 +13,8 @@ import {
 import { textFromUIMessage } from "@/lib/message-text";
 import { upsertConversation } from "@/lib/chat-storage";
 
-const CHAT_ID = "fortis-packaging-assistant";
-const STORAGE_KEY = "fortis-chat-active";
+const CHAT_ID = "fortis-edge-assistant";
+const STORAGE_KEY = "fortis-edge-chat-active";
 
 type FortisChatContextValue = ReturnType<typeof useChat>;
 
@@ -44,7 +44,7 @@ export function FortisChatProvider({ children }: { children: React.ReactNode }) 
         }));
       const title =
         stored.find((m) => m.role === "user")?.content.slice(0, 72) ??
-        "Packaging conversation";
+        "Fortis Edge conversation";
       const now = new Date().toISOString();
       upsertConversation({
         id: CHAT_ID,

@@ -4,7 +4,6 @@ import { ChatWidget } from "@/components/chat-widget";
 import { FortisChatProvider } from "@/components/chat-provider";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
-import { QuoteProvider } from "@/lib/quote-context";
 import { FORTIS } from "@/lib/constants";
 import "./globals.css";
 
@@ -34,14 +33,12 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} min-h-screen antialiased`}
       >
         <FortisChatProvider>
-          <QuoteProvider>
-            <div className="flex min-h-screen flex-col">
-              <SiteHeader />
-              <main className="flex-1">{children}</main>
-              <SiteFooter />
-            </div>
-            <ChatWidget />
-          </QuoteProvider>
+          <div className="flex min-h-screen flex-col">
+            <SiteHeader />
+            <main className="flex-1">{children}</main>
+            <SiteFooter />
+          </div>
+          <ChatWidget />
         </FortisChatProvider>
       </body>
     </html>

@@ -25,7 +25,7 @@ export async function POST(req: Request) {
     model: fortisModel,
     system: `${FORTIS_SYSTEM_PROMPT}
 
-You are helping Fortis internal teams summarize customer conversations into FAQ-style knowledge.
+You are helping Fortis Edge (Tier 3 & 4) teams summarize customer conversations into FAQ-style knowledge.
 Return ONLY valid JSON (no markdown fences) with this shape:
 {"faqs":[{"question":"string","answer":"string"}]}
 Rules:

@@ -1,27 +1,92 @@
 [
   {
-    "id": "faq-1",
-    "question": "What packaging formats does Fortis Solutions Group offer?",
-    "answer": "We offer Pressure Sensitive Labels (including RFID Labels, Booklets & Coupons, and peel-and-reveal), RFID Labels, Booklets & Coupons, Shrink Sleeves (360° branding, tamper-evident), Flexible Packaging (pouches, rollstock, cold seal), and Folding Cartons (wrap-around sleeves, tray inserts). We also support RENEW™ Sustainable Packaging and label applicators including Gold Seal and CTM."
+    "id": "fe-1",
+    "question": "What is Fortis Edge?",
+    "answer": "Fortis Edge is the Fortis Solutions Group Small Business Unit built for Tier 3 and Tier 4 customers and low-quantity orders. It pairs dedicated digital speed capacity (HP Digital Press plants in Orem, UT and Marietta, GA) with a customer portal designed to remove routine phone/email friction for standard tasks.",
+    "category": "Overview"
   },
   {
-    "id": "faq-2",
-    "question": "What is RENEW™ Sustainable Packaging?",
-    "answer": "RENEW™ is Fortis Solutions Group’s sustainable packaging line supporting the circular economy with wash-off and recyclable options across applicable labels, sleeves, flexible packaging, and cartons—aligned to your brand and regulatory requirements."
+    "id": "fe-2",
+    "question": "Who is Fortis Edge designed for?",
+    "answer": "Tier 3 and Tier 4 brands and programs that need speed, clarity, and repeatable digital workflows—without sacrificing Fortis quality, color management, or solutions support when exceptions arise.",
+    "category": "Overview"
   },
   {
-    "id": "faq-3",
-    "question": "Can I check order status and proofs in the portal?",
-    "answer": "Yes. The Fortis customer portal supports order status visibility, proofing workflows, estimate requests, RFP intake, document access, and collaboration with your Fortis team—designed to keep programs moving with clarity and speed."
+    "id": "fe-3",
+    "question": "How do the Orem and Marietta plants support Fortis Edge?",
+    "answer": "Orem and Marietta operate as digital speed plants with HP Digital Press capacity focused on pressure-sensitive label programs for Fortis Edge. They are positioned to turn low-quantity, high-changeover work efficiently while staying aligned to Fortis manufacturing standards.",
+    "category": "Plants"
   },
   {
-    "id": "faq-4",
-    "question": "Do you provide label applicators?",
-    "answer": "Fortis supports application equipment programs including Gold Seal and CTM label applicators. Your Fortis representative can align equipment recommendations with your line speeds, container formats, and label constructions."
+    "id": "fe-4",
+    "question": "What is different between Tier 1 & 2 and Tier 3 & 4 on the portal?",
+    "answer": "Tier 1 & 2 programs typically use enterprise workflows and deeper integrations across Fortis systems. Tier 3 & 4 Fortis Edge experiences emphasize self-service for routine tasks, faster digital handoffs, and transparent status—scaled to smaller order profiles and portal-first habits.",
+    "category": "Portal"
   },
   {
-    "id": "faq-5",
-    "question": "What makes Fortis different on lead time and quality?",
-    "answer": "Fortis Solutions Group focuses on industry-leading lead times, rigorous quality control, disciplined color management, and a solutions-oriented approach—backed by over 1,100 employees and strategic U.S. locations."
+    "id": "fe-5",
+    "question": "What can I do in the Fortis Edge portal today (April 2026 update)?",
+    "answer": "The April 2026 portal update introduces live capabilities listed on the Customer Portal page, including improved order visibility paths and digital request flows where enabled for your account. Features roll out in phases—check the roadmap for proofing, FlexLink, split shipping, and integration milestones.",
+    "category": "Portal"
+  },
+  {
+    "id": "fe-6",
+    "question": "When is online proofing targeted for Orem?",
+    "answer": "Communications target online proofing for Orem on March 1, 2026. Dates can shift based on integration readiness and plant validation—use the portal status area or your Fortis Edge contact for the latest account-specific timing.",
+    "category": "Roadmap"
+  },
+  {
+    "id": "fe-7",
+    "question": "What are FlexLink and Split Shipping, and when are they targeted?",
+    "answer": "FlexLink is targeted for March 15 as part of Phase 2 connectivity improvements. Split Shipping is targeted for April 30 to support fulfillment scenarios that need divided shipments. Treat these as program targets subject to integration and operational readiness.",
+    "category": "Roadmap"
+  },
+  {
+    "id": "fe-8",
+    "question": "What is the status of Radius, Infigo, and LabelTraxx integrations?",
+    "answer": "Radius, Infigo, and LabelTraxx are part of the integration roadmap to connect portal workflows with MIS/ERP and production systems. Status varies by wave—see the integration table on the Customer Portal page and confirm with your Fortis team for your stack.",
+    "category": "Integrations"
+  },
+  {
+    "id": "fe-9",
+    "question": "How do I request estimates or submit an RFP?",
+    "answer": "Use the portal estimate and RFP paths where enabled for your account. Include volumes, substrates, embellishments, and timing. If a workflow is not yet enabled, your Fortis Edge representative will route the request through the correct commercial path.",
+    "category": "Portal"
+  },
+  {
+    "id": "fe-10",
+    "question": "Does Fortis Edge support Renew™ sustainable options?",
+    "answer": "Yes—Renew™ remains part of the broader Fortis sustainability story. Fortis Edge programs can explore wash-off and recyclable constructions where applicable; feasibility depends on artwork, adhesive, and channel requirements.",
+    "category": "Sustainability"
+  },
+  {
+    "id": "fe-11",
+    "question": "What label formats are in scope for Fortis Edge on the portal right now?",
+    "answer": "Initial Fortis Edge portal scope emphasizes pressure-sensitive labels produced on digital HP presses in Orem and Marietta. Other Fortis formats remain available through Fortis teams even if not yet fully self-service on the portal.",
+    "category": "Products"
+  },
+  {
+    "id": "fe-12",
+    "question": "Where should I go for order status?",
+    "answer": "Start in the customer portal order status views when enabled. If a status is not yet visible for your lane, use the assistant to understand the right next step and when to engage your Fortis Edge contact.",
+    "category": "Portal"
+  },
+  {
+    "id": "fe-13",
+    "question": "What if my program needs an exception or rush?",
+    "answer": "The portal handles routine work; exceptions, rush timing, and complex approvals should route through your Fortis Edge contact. The assistant can outline typical escalation paths without quoting unauthorized commitments.",
+    "category": "Operations"
+  },
+  {
+    "id": "fe-14",
+    "question": "How does Fortis Edge protect color and quality at speed?",
+    "answer": "Fortis Edge uses Fortis color management and quality disciplines across digital production. Speed targets digital handoffs and plant throughput—not shortcuts on control plans, proofing gates when live, and validation appropriate to the SKU.",
+    "category": "Quality"
+  },
+  {
+    "id": "fe-15",
+    "question": "Is there a project plan for Phase 2?",
+    "answer": "Yes—Phase 2 milestones are summarized on the Timeline & Roadmap page and linked from the Customer Portal. Use those artifacts for internal alignment; execution details remain with your Fortis program team.",
+    "category": "Roadmap"
   }
 ]

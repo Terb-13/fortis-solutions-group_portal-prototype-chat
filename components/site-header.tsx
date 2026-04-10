@@ -1,53 +1,43 @@
 import Link from "next/link";
 import { FortisLogo } from "@/components/fortis-logo";
-import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-const links = [
-  { href: "/explorer", label: "Explorer" },
-  { href: "/assistant", label: "Assistant" },
-  { href: "/proposal", label: "Proposal" },
-  { href: "/dashboard", label: "Dashboard" },
+const nav = [
+  { href: "/", label: "Home" },
+  { href: "/what-is-fortis-edge", label: "What is Fortis Edge?" },
+  { href: "/benefits-impact", label: "Benefits & Impact" },
+  { href: "/customer-portal", label: "The Customer Portal" },
+  { href: "/products-services", label: "Products & Services" },
+  { href: "/timeline-roadmap", label: "Timeline & Roadmap" },
+  { href: "/faq", label: "FAQ" },
 ] as const;
 
 export function SiteHeader({ className }: { className?: string }) {
   return (
     <header
       className={cn(
-        "sticky top-0 z-40 border-b border-border/80 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80",
+        "sticky top-0 z-50 border-b border-border/80 bg-background/95 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-background/90",
         className,
       )}
     >
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 md:px-6">
-        <FortisLogo />
-        <nav className="hidden items-center gap-1 md:flex" aria-label="Primary">
-          {links.map((l) => (
+      <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-3 md:px-6">
+        <div className="flex items-center gap-4">
+          <FortisLogo />
+        </div>
+        <nav
+          className="-mx-1 flex gap-1 overflow-x-auto pb-1 text-sm scrollbar-thin md:flex-wrap md:gap-0 md:overflow-visible"
+          aria-label="Primary"
+        >
+          {nav.map((item) => (
             <Link
-              key={l.href}
-              href={l.href}
-              className={cn(buttonVariants({ variant: "ghost", size: "sm" }))}
+              key={item.href}
+              href={item.href}
+              className="whitespace-nowrap rounded-md px-2.5 py-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground md:px-3"
             >
-              {l.label}
+              {item.label}
             </Link>
           ))}
         </nav>
-        <div className="flex items-center gap-2">
-          <Link
-            href="/explorer"
-            className={cn(
-              buttonVariants({ size: "sm" }),
-              "hidden bg-[#003087] text-white hover:bg-[#003087]/90 sm:inline-flex",
-            )}
-          >
-            Explore
-          </Link>
-          <Link
-            href="/assistant"
-            className={cn(buttonVariants({ size: "sm", variant: "outline" }))}
-          >
-            Chat
-          </Link>
-        </div>
       </div>
     </header>
   );
