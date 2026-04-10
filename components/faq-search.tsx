@@ -4,7 +4,13 @@ import { useMemo, useState } from "react";
 import { Input } from "@/components/ui/input";
 import type { FaqItem } from "@/lib/faqs";
 
-export function FaqSearch({ items }: { items: FaqItem[] }) {
+export function FaqSearch({
+  items,
+  onRefresh,
+}: {
+  items: FaqItem[];
+  onRefresh?: () => void;
+}) {
   const [q, setQ] = useState("");
 
   const filtered = useMemo(() => {
@@ -28,9 +34,20 @@ export function FaqSearch({ items }: { items: FaqItem[] }) {
           className="h-11"
         />
       </div>
-      <p className="mt-3 text-center text-sm text-muted-foreground">
-        Showing {filtered.length} of {items.length} entries
-      </p>
+      <div className="mt-3 flex flex-wrap items-center justify-center gap-3 text-sm text-muted-foreground">
+        <span>
+          Showing {filtered.length} of {items.length} entries
+        </span>
+        {onRefresh && (
+          <button
+            type="button"
+            className="text-[#003087] underline-offset-4 hover:underline"
+            onClick={() => onRefresh()}
+          >
+            Refresh
+          </button>
+        )}
+      </div>
       <ul className="mt-10 space-y-4">
         {filtered.map((f) => (
           <li

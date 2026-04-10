@@ -1,3 +1,4 @@
+import { AssistantToolbar } from "@/components/assistant-toolbar";
 import { ChatPanel } from "@/components/chat-panel";
 import { FORTIS } from "@/lib/constants";
 
@@ -20,6 +21,7 @@ export default function AssistantPage() {
           The floating widget on every page continues this same conversation.
         </p>
       </div>
+      <AssistantToolbar />
       <ChatPanel />
     </div>
   );
