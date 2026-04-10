@@ -1,0 +1,81 @@
+[
+  {
+    "id": "pressure-sensitive-labels",
+    "name": "Pressure Sensitive Labels",
+    "shortDescription": "Premium facestocks, adhesives, and finishes—including RFID labels, booklets & coupons, and peel-and-reveal constructions.",
+    "includes": ["RFID Labels", "Booklets & Coupons", "Peel-and-reveal"],
+    "specs": [
+      "Film & paper facestocks",
+      "Permanent, removable, and specialty adhesives",
+      "Spot UV, foil, embossing, extended content",
+      "Serialization and variable data ready"
+    ],
+    "renewEligible": true,
+    "image": "/images/pressure-sensitive-labels.jpg"
+  },
+  {
+    "id": "rfid-labels",
+    "name": "RFID Labels",
+    "shortDescription": "Inlays and smart labels engineered for inventory, authentication, and retail applications.",
+    "includes": ["NFC / UHF options", "Encoding & verification support"],
+    "specs": [
+      "Retail & supply chain proven constructions",
+      "Compatible with pressure-sensitive workflows",
+      "Designed for reliable read performance"
+    ],
+    "renewEligible": true,
+    "image": "/images/rfid-labels.jpg"
+  },
+  {
+    "id": "booklets-coupons",
+    "name": "Booklets & Coupons",
+    "shortDescription": "Multi-page and folded constructions for regulatory copy, promotions, and extended storytelling.",
+    "includes": ["Booklet labels", "Instant redeem coupons"],
+    "specs": [
+      "Extended content without sacrificing shelf appeal",
+      "Designed for hand- or machine-application",
+      "Integrates with PS label programs"
+    ],
+    "renewEligible": true,
+    "image": "/images/booklets-coupons.jpg"
+  },
+  {
+    "id": "shrink-sleeves",
+    "name": "Shrink Sleeves",
+    "shortDescription": "360° branding with contour-friendly graphics; tamper-evident options available.",
+    "includes": ["360° branding", "Tamper-evident"],
+    "specs": [
+      "PET, OPS, PLA, and other film options",
+      "Full-body or partial sleeve coverage",
+      "High-impact graphics and specialty finishes"
+    ],
+    "renewEligible": true,
+    "image": "/images/shrink-sleeves.jpg"
+  },
+  {
+    "id": "flexible-packaging",
+    "name": "Flexible Packaging",
+    "shortDescription": "Pouches, rollstock, and cold-seal solutions for snacks, confectionery, and more.",
+    "includes": ["Pouches", "Rollstock", "Cold seal"],
+    "specs": [
+      "Barrier films matched to product needs",
+      "Matte, gloss, and soft-touch finishes",
+      "High-speed converting compatibility"
+    ],
+    "renewEligible": true,
+    "image": "/images/flexible-packaging.jpg"
+  },
+  {
+    "id": "folding-cartons",
+    "name": "Folding Cartons",
+    "shortDescription": "Structural cartons for retail-ready presentation with sleeves and inserts.",
+    "includes": ["Wrap-around sleeves", "Tray inserts"],
+    "specs": [
+      "SBS, SUS, and specialty boards",
+      "Windowing, embossing, and foil options",
+      "Designed for efficient fulfillment"
+    ],
+    "renewEligible": true,
+    "image": "/images/folding-cartons.jpg"
+  }
+]
