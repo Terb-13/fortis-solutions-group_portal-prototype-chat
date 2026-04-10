@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { RenewBadge } from "@/components/renew-badge";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import type { Product } from "@/lib/products";
+import { cn } from "@/lib/utils";
 
 export function ProductExplorerClient({ products }: { products: Product[] }) {
   const [openId, setOpenId] = useState<string | null>(null);
@@ -65,12 +66,15 @@ export function ProductExplorerClient({ products }: { products: Product[] }) {
               >
                 Details
               </Button>
-              <Button
-                className="flex-1 bg-[#003087] text-white hover:bg-[#003087]/90"
-                asChild
+              <Link
+                href="/customer-portal"
+                className={cn(
+                  buttonVariants({ variant: "default", size: "default" }),
+                  "flex-1 bg-[#003087] text-white hover:bg-[#003087]/90",
+                )}
               >
-                <Link href="/customer-portal">Next steps</Link>
-              </Button>
+                Next steps
+              </Link>
             </CardFooter>
           </Card>
         ))}
@@ -121,12 +125,15 @@ export function ProductExplorerClient({ products }: { products: Product[] }) {
                   sustainability goals.
                 </div>
               )}
-              <Button
-                className="w-full bg-[#003087] text-white hover:bg-[#003087]/90"
-                asChild
+              <Link
+                href="/customer-portal"
+                className={cn(
+                  buttonVariants({ variant: "default", size: "default" }),
+                  "w-full bg-[#003087] text-white hover:bg-[#003087]/90",
+                )}
               >
-                <Link href="/customer-portal">Portal &amp; contact</Link>
-              </Button>
+                Portal &amp; contact
+              </Link>
             </>
           )}
         </DialogContent>
