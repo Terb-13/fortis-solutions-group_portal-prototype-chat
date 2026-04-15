@@ -605,8 +605,7 @@ export function DashboardClient() {
                     ))}
                   </select>
                   <p className="text-xs text-muted-foreground">
-                    Choose an existing FAQ to merge Grok’s suggestion into it;
-                    leave empty to create a new FAQ with the visibility above.
+                    {`Choose an existing FAQ to merge Grok's suggestion into it. Leave empty to create a new FAQ with the visibility above.`}
                   </p>
                 </div>
                 <Button
