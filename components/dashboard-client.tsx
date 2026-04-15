@@ -40,6 +40,7 @@ import {
 } from "@/lib/faq-store";
 import { FORTIS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
+import { Flag } from "lucide-react";
 
 type ReviewResult = {
   improvedBotResponse: string;
@@ -111,6 +112,7 @@ export function DashboardClient() {
     setCorrectionNote("");
     setReviewResult(null);
     setReviewError(null);
+    setUpdateFaqId("");
     setSheetOpen(true);
   }
 
@@ -176,32 +178,28 @@ export function DashboardClient() {
     }
   }
 
-  function applyCreateFaq() {
+  function saveFaqFromReview() {
     if (!reviewResult) return;
     const r = reviewResult.faqRecommendation;
-    addCustomFaq({
-      question: r.question,
-      answer: r.answer,
-      visible: newFaqPublished,
-    });
-    setSaveMsg("New FAQ saved to local store.");
-    setFaqTick((x) => x + 1);
-    refresh();
-  }
-
-  function applyUpdateFaq() {
-    if (!reviewResult || !updateFaqId) return;
-    const r = reviewResult.faqRecommendation;
-    const baseIds = new Set(getBaselineFaqs().map((x) => x.id));
-    if (baseIds.has(updateFaqId)) {
-      updateBaselineFaq(updateFaqId, { question: r.question, answer: r.answer });
+    if (updateFaqId) {
+      const baseIds = new Set(getBaselineFaqs().map((x) => x.id));
+      if (baseIds.has(updateFaqId)) {
+        updateBaselineFaq(updateFaqId, { question: r.question, answer: r.answer });
+      } else {
+        updateCustomFaq(updateFaqId, {
+          question: r.question,
+          answer: r.answer,
+        });
+      }
+      setSaveMsg("Existing FAQ updated in local store.");
     } else {
-      updateCustomFaq(updateFaqId, {
+      addCustomFaq({
         question: r.question,
         answer: r.answer,
+        visible: newFaqPublished,
       });
+      setSaveMsg("New FAQ saved to local store.");
     }
-    setSaveMsg("FAQ update saved to local store.");
     setFaqTick((x) => x + 1);
     refresh();
   }
@@ -285,7 +283,7 @@ export function DashboardClient() {
             </CardTitle>
           </CardHeader>
           <CardContent className="text-xs text-muted-foreground">
-            Stored assistant threads
+            Assistant threads stored in this browser
           </CardContent>
         </Card>
         <Card className="border-border/80 shadow-card">
@@ -299,12 +297,12 @@ export function DashboardClient() {
             </CardTitle>
           </CardHeader>
           <CardContent className="text-xs text-muted-foreground">
-            Flags · custom FAQs in store
+            Message flags · custom FAQs in store
           </CardContent>
         </Card>
         <Card className="border-border/80 shadow-card">
           <CardHeader className="pb-2">
-            <CardDescription>Published vs hidden FAQs</CardDescription>
+            <CardDescription>Published FAQs vs hidden FAQs</CardDescription>
             <CardTitle className="font-heading text-3xl tabular-nums text-[#003087]">
               {metrics.published}{" "}
               <span className="text-muted-foreground">/</span>{" "}
@@ -312,7 +310,7 @@ export function DashboardClient() {
             </CardTitle>
           </CardHeader>
           <CardContent className="text-xs text-muted-foreground">
-            On site · draft / hidden
+            Visible on site · draft or hidden
           </CardContent>
         </Card>
       </div>
@@ -324,63 +322,103 @@ export function DashboardClient() {
           <h2 className="font-heading text-lg font-semibold text-[#003087]">
             Conversations
           </h2>
-          <div className="mt-4 overflow-x-auto rounded-2xl border border-border/80 shadow-card">
-            <table className="w-full min-w-[640px] text-left text-sm">
-              <thead className="bg-[#003087] text-white">
-                <tr>
-                  <th className="p-3 font-semibold">Updated</th>
-                  <th className="p-3 font-semibold">Preview</th>
-                  <th className="p-3 font-semibold">Status</th>
-                  <th className="p-3 font-semibold">Messages</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border bg-card">
-                {rows.length === 0 ? (
-                  <tr>
-                    <td colSpan={4} className="p-6 text-muted-foreground">
-                      No conversations yet. Use the site assistant, then refresh.
-                    </td>
-                  </tr>
-                ) : (
-                  rows.map((r) => (
-                    <tr
-                      key={r.id}
-                      className="cursor-pointer transition hover:bg-muted/50"
-                      onClick={() => {
-                        setSelectedId(r.id);
-                        setSelectedMessageId(null);
-                      }}
+          <p className="mt-1 text-sm text-muted-foreground">
+            Tap a conversation to open the full thread.
+          </p>
+          {rows.length === 0 ? (
+            <div className="mt-4 rounded-2xl border border-border/80 bg-card p-6 text-sm text-muted-foreground shadow-card">
+              No conversations yet. Use the site assistant, then refresh this
+              page.
+            </div>
+          ) : (
+            <>
+              <div className="mt-4 space-y-3 md:hidden">
+                {rows.map((r) => (
+                  <button
+                    key={r.id}
+                    type="button"
+                    onClick={() => {
+                      setSelectedId(r.id);
+                      setSelectedMessageId(null);
+                    }}
+                    className="w-full rounded-2xl border border-border/80 bg-card p-4 text-left shadow-card transition hover:border-[#003087]/30 hover:bg-muted/30"
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <span className="line-clamp-2 font-medium text-foreground">
+                        {r.title}
+                      </span>
+                      <span className="shrink-0 text-xs text-muted-foreground">
+                        {r.messages.length} msg
+                      </span>
+                    </div>
+                    <p className="mt-2 text-xs text-muted-foreground">
+                      {new Date(r.updatedAt).toLocaleString()}
+                    </p>
+                    <span
+                      className={cn(
+                        "mt-3 inline-flex rounded-full px-2 py-0.5 text-xs font-medium",
+                        r.status === "needs_review"
+                          ? "bg-amber-100 text-amber-900"
+                          : "bg-muted text-muted-foreground",
+                      )}
                     >
-                      <td className="p-3 whitespace-nowrap text-xs text-muted-foreground">
-                        {new Date(r.updatedAt).toLocaleString()}
-                      </td>
-                      <td className="p-3">
-                        <span className="line-clamp-2 font-medium">
-                          {r.title}
-                        </span>
-                      </td>
-                      <td className="p-3">
-                        <span
-                          className={cn(
-                            "rounded-full px-2 py-0.5 text-xs font-medium",
-                            r.status === "needs_review"
-                              ? "bg-amber-100 text-amber-900"
-                              : "bg-muted text-muted-foreground",
-                          )}
-                        >
-                          {r.status}
-                          {(r.flags?.length ?? 0) > 0 ? " · flagged" : ""}
-                        </span>
-                      </td>
-                      <td className="p-3 text-muted-foreground">
-                        {r.messages.length}
-                      </td>
+                      {r.status}
+                      {(r.flags?.length ?? 0) > 0 ? " · flagged" : ""}
+                    </span>
+                  </button>
+                ))}
+              </div>
+              <div className="mt-4 hidden overflow-x-auto rounded-2xl border border-border/80 shadow-card md:block">
+                <table className="w-full min-w-[640px] text-left text-sm">
+                  <thead className="bg-[#003087] text-white">
+                    <tr>
+                      <th className="p-3 font-semibold">Updated</th>
+                      <th className="p-3 font-semibold">Preview</th>
+                      <th className="p-3 font-semibold">Status</th>
+                      <th className="p-3 font-semibold">Messages</th>
                     </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
+                  </thead>
+                  <tbody className="divide-y divide-border bg-card">
+                    {rows.map((r) => (
+                      <tr
+                        key={r.id}
+                        className="cursor-pointer transition hover:bg-muted/50"
+                        onClick={() => {
+                          setSelectedId(r.id);
+                          setSelectedMessageId(null);
+                        }}
+                      >
+                        <td className="p-3 whitespace-nowrap text-xs text-muted-foreground">
+                          {new Date(r.updatedAt).toLocaleString()}
+                        </td>
+                        <td className="p-3">
+                          <span className="line-clamp-2 font-medium">
+                            {r.title}
+                          </span>
+                        </td>
+                        <td className="p-3">
+                          <span
+                            className={cn(
+                              "rounded-full px-2 py-0.5 text-xs font-medium",
+                              r.status === "needs_review"
+                                ? "bg-amber-100 text-amber-900"
+                                : "bg-muted text-muted-foreground",
+                            )}
+                          >
+                            {r.status}
+                            {(r.flags?.length ?? 0) > 0 ? " · flagged" : ""}
+                          </span>
+                        </td>
+                        <td className="p-3 text-muted-foreground">
+                          {r.messages.length}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
+          )}
         </div>
       ) : (
         <div className="space-y-4">
@@ -413,11 +451,15 @@ export function DashboardClient() {
                       </span>
                       <Button
                         type="button"
-                        variant="outline"
+                        variant="ghost"
                         size="sm"
-                        className="h-7 shrink-0 text-xs"
-                        onClick={() => openFlagPanel(m.id)}
+                        className="h-7 shrink-0 gap-1 px-2 text-xs text-muted-foreground hover:text-[#003087]"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          openFlagPanel(m.id);
+                        }}
                       >
+                        <Flag className="size-3.5" aria-hidden />
                         Flag this response
                       </Button>
                     </div>
@@ -466,7 +508,9 @@ export function DashboardClient() {
               </div>
             )}
             <div className="grid gap-2">
-              <Label htmlFor="correction">Your correction</Label>
+              <Label htmlFor="correction">
+                Your correction (optional context for Grok)
+              </Label>
               <Textarea
                 id="correction"
                 rows={4}
@@ -527,66 +571,68 @@ export function DashboardClient() {
                     </div>
                   )}
                 </div>
-                <div className="flex flex-wrap items-center gap-3 rounded-lg border border-border/80 bg-muted/30 px-3 py-2">
-                  <span className="text-xs text-muted-foreground">
-                    Hidden (draft)
-                  </span>
-                  <Switch
-                    checked={newFaqPublished}
-                    onCheckedChange={setNewFaqPublished}
-                    aria-label="Toggle published on site or hidden draft"
-                  />
-                  <span className="text-xs font-medium text-foreground">
-                    Published on site
-                  </span>
+                <div className="space-y-3 rounded-lg border border-border/80 bg-muted/20 p-3">
+                  <p className="text-xs font-medium text-foreground">
+                    Create new FAQ
+                  </p>
+                  <div className="flex flex-wrap items-center gap-3">
+                    <span className="text-xs text-muted-foreground">
+                      Hidden (draft)
+                    </span>
+                    <Switch
+                      checked={newFaqPublished}
+                      onCheckedChange={setNewFaqPublished}
+                      aria-label="Published on site or hidden draft"
+                    />
+                    <span className="text-xs font-medium text-foreground">
+                      Published on site
+                    </span>
+                  </div>
                 </div>
                 <div className="grid gap-2">
-                  <Label htmlFor="faqid">Update existing FAQ</Label>
+                  <Label htmlFor="faqid">Or update existing FAQ</Label>
                   <select
                     id="faqid"
                     className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
                     value={updateFaqId}
                     onChange={(e) => setUpdateFaqId(e.target.value)}
                   >
-                    <option value="">— Select FAQ —</option>
+                    <option value="">— New FAQ (uses toggle above) —</option>
                     {adminFaqs.map((f) => (
                       <option key={f.id} value={f.id}>
                         {f.question.slice(0, 72)}
                       </option>
                     ))}
                   </select>
+                  <p className="text-xs text-muted-foreground">
+                    Choose an existing FAQ to merge Grok’s suggestion into it;
+                    leave empty to create a new FAQ with the visibility above.
+                  </p>
                 </div>
-                <div className="flex flex-col gap-2 sm:flex-row">
-                  <Button
-                    type="button"
-                    variant="secondary"
-                    className="flex-1"
-                    onClick={applyCreateFaq}
-                  >
-                    Create new FAQ
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="secondary"
-                    className="flex-1"
-                    disabled={!updateFaqId}
-                    onClick={applyUpdateFaq}
-                  >
-                    Update existing FAQ
-                  </Button>
-                </div>
+                <Button
+                  type="button"
+                  className="w-full bg-[#003087] text-white hover:bg-[#003087]/90"
+                  disabled={!reviewResult}
+                  onClick={saveFaqFromReview}
+                >
+                  Save
+                </Button>
               </div>
             )}
           </div>
 
           <SheetFooter className="border-t border-border/80 bg-muted/20 px-6 py-4">
+            <p className="text-center text-xs text-muted-foreground">
+              Export merged visible FAQs for the public site.
+            </p>
             <Button
               type="button"
+              variant="outline"
               className="w-full"
               disabled={saveBusy}
               onClick={() => void saveJsonFile()}
             >
-              {saveBusy ? "Saving…" : "Save — export public FAQs (JSON)"}
+              {saveBusy ? "Exporting…" : "Export FAQs (JSON)"}
             </Button>
             {saveMsg && (
               <p className="text-center text-xs text-muted-foreground">
@@ -604,15 +650,16 @@ export function DashboardClient() {
           Export public FAQs
         </h2>
         <p className="text-sm text-muted-foreground">
-          Download or write merged visible FAQs for the site (same as Save in
+          Download or write merged visible FAQs for the site (same as Export in
           the review panel).
         </p>
         <Button
           type="button"
+          variant="outline"
           disabled={saveBusy}
           onClick={() => void saveJsonFile()}
         >
-          {saveBusy ? "Saving…" : "Save — export public FAQs (JSON)"}
+          {saveBusy ? "Exporting…" : "Export FAQs (JSON)"}
         </Button>
         {saveMsg && !sheetOpen && (
           <p className="text-sm text-muted-foreground">{saveMsg}</p>
