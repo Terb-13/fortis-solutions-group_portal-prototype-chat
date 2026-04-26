@@ -1,9 +1,5 @@
-import {
-  Factory,
-  Headphones,
-  LineChart,
-  Settings2,
-} from "lucide-react";
+import Image from "next/image";
+import { Factory, Headphones, LineChart, Settings2 } from "lucide-react";
 import { FORTIS } from "@/lib/constants";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -15,6 +11,10 @@ export const metadata = {
 const roles = {
   Sales: {
     icon: LineChart,
+    image: {
+      src: "/images/wine-bottle-50574.jpg",
+      alt: "Retail wine bottle with premium label and capsule — on-shelf program example",
+    },
     items: [
       "Sharper Tier 3 & 4 narrative",
       "Portal proof points",
@@ -23,6 +23,10 @@ const roles = {
   },
   CX: {
     icon: Headphones,
+    image: {
+      src: "/images/akram-huseyn-pA3_Ry7VYcs-unsplash.jpg",
+      alt: "Skincare and cosmetics set — health and beauty customer experience example",
+    },
     items: [
       "Less noise on routine status",
       "Clear escalation path",
@@ -31,6 +35,10 @@ const roles = {
   },
   Ops: {
     icon: Settings2,
+    image: {
+      src: "/images/Beer-Display.jpg",
+      alt: "Retail beer display and branded cartons — in-store display operations",
+    },
     items: [
       "Digital handoffs",
       "FlexLink / split shipping targets",
@@ -39,6 +47,10 @@ const roles = {
   },
   Plants: {
     icon: Factory,
+    image: {
+      src: "/images/micheile-henderson-I2lF6gNn5Zo-unsplash.jpg",
+      alt: "Premium health and beauty packaging flat lay for plant-ready programs",
+    },
     items: [
       "HP lanes for low-quantity",
       "Proofing tied to Orem",
@@ -99,25 +111,37 @@ export default function BenefitsImpactPage() {
           })}
         </TabsList>
         {(Object.keys(roles) as (keyof typeof roles)[]).map((r) => {
-          const { icon: Icon, items } = roles[r];
+          const { icon: Icon, items, image } = roles[r];
           return (
             <TabsContent key={r} value={r} className="mt-6">
-              <div className="rounded-2xl border border-border/80 bg-card p-8 shadow-card md:p-10">
-                <div className="flex items-center gap-3 text-[#003087]">
-                  <Icon className="size-8" strokeWidth={1.5} />
-                  <h2 className="font-heading text-2xl font-semibold">{r}</h2>
+              <div className="grid gap-6 overflow-hidden rounded-2xl border border-border/80 bg-card shadow-card md:grid-cols-2">
+                <div className="relative min-h-[220px] w-full sm:min-h-[280px]">
+                  <Image
+                    src={image.src}
+                    alt={image.alt}
+                    fill
+                    className="object-cover"
+                    sizes="(min-width: 768px) 50vw, 100vw"
+                    priority={r === "Sales"}
+                  />
                 </div>
-                <ul className="mt-6 grid gap-4 sm:grid-cols-3">
-                  {items.map((x) => (
-                    <li
-                      key={x}
-                      className="flex gap-3 rounded-xl border border-dashed border-border bg-muted/30 p-4 text-sm text-muted-foreground"
-                    >
-                      <span className="mt-0.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#00A651]" />
-                      <span>{x}</span>
-                    </li>
-                  ))}
-                </ul>
+                <div className="p-6 md:p-8">
+                  <div className="flex items-center gap-3 text-[#003087]">
+                    <Icon className="size-8" strokeWidth={1.5} />
+                    <h2 className="font-heading text-2xl font-semibold">{r}</h2>
+                  </div>
+                  <ul className="mt-6 grid gap-4">
+                    {items.map((x) => (
+                      <li
+                        key={x}
+                        className="flex gap-3 rounded-xl border border-dashed border-border bg-muted/30 p-4 text-sm text-muted-foreground"
+                      >
+                        <span className="mt-0.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#00A651]" />
+                        <span>{x}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
             </TabsContent>
           );

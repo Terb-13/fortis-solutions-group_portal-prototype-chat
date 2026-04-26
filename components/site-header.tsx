@@ -55,8 +55,11 @@ function NavLink({
 }
 
 export function SiteHeader({ className }: { className?: string }) {
+  const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
+  const headerLogoVariant =
+    pathname === "/benefits-impact" || pathname === "/faq" ? "black" : "default";
 
   return (
     <header
@@ -66,7 +69,11 @@ export function SiteHeader({ className }: { className?: string }) {
       )}
     >
       <div className="mx-auto flex max-w-7xl items-center gap-2 px-4 py-3 md:gap-4 md:px-6">
-        <FortisLogo className="min-w-0 shrink" />
+        <FortisLogo
+          className="min-w-0 shrink"
+          variant={headerLogoVariant}
+          compact
+        />
 
         <nav
           className="hidden min-w-0 flex-1 items-center justify-center gap-0.5 lg:flex xl:gap-1"
@@ -100,10 +107,13 @@ export function SiteHeader({ className }: { className?: string }) {
               <Menu className="size-5" />
             </SheetTrigger>
             <SheetContent side="right" className="w-[min(100vw,20rem)] gap-0 p-0">
-              <SheetHeader className="border-b px-4 py-4 text-left">
-                <SheetTitle className="font-heading text-[#003087]">
-                  Menu
-                </SheetTitle>
+              <SheetHeader className="space-y-3 border-b px-4 py-4 text-left">
+                <FortisLogo
+                  variant="stacked"
+                  className="max-w-full"
+                  priority={false}
+                />
+                <SheetTitle className="font-heading text-[#003087]">Menu</SheetTitle>
               </SheetHeader>
               <nav
                 className="flex flex-col gap-1 p-3"
