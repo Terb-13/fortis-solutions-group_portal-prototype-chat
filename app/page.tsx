@@ -3,7 +3,6 @@ import Link from "next/link";
 import { ArrowRight, Candy, PartyPopper, Snowflake } from "lucide-react";
 import { AnnouncementTicker } from "@/components/announcement-ticker";
 import { HomeHeroBlock } from "@/components/home-hero-block";
-import { HomeInternalMetrics } from "@/components/home-internal-metrics";
 import { HomeWhatsNew } from "@/components/home-whats-new";
 import { buttonVariants } from "@/components/ui/button";
 import { FORTIS } from "@/lib/constants";
@@ -45,17 +44,17 @@ export default function HomePage() {
 
       <section className="section-y border-t border-white/[0.06]">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
-          <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+          <div className="mb-8 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
             <div>
               <h2 className="text-2xl font-semibold tracking-tight text-white md:text-3xl">
-                Internal pulse
+                SBU &amp; portal highlights
               </h2>
-              <p className="mt-1 text-sm text-zinc-500">
-                Live metrics from this browser (assistant + FAQ store)
+              <p className="mt-2 max-w-2xl text-sm leading-relaxed text-zinc-500">
+                Seasonal visuals and program-ready cues—check the navbar for
+                live portal rollout status.
               </p>
             </div>
           </div>
-          <HomeInternalMetrics />
           <HomeWhatsNew />
         </div>
       </section>
