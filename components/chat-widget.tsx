@@ -24,7 +24,7 @@ export function ChatWidget() {
       <SheetTrigger
         className={cn(
           buttonVariants({ size: "icon-lg" }),
-          "fixed bottom-6 right-6 z-50 h-14 w-14 rounded-full border-0 bg-[#003087] p-0 text-white shadow-[0_8px_30px_rgba(0,48,135,0.35)] ring-2 ring-[#00A651]/30 transition hover:scale-[1.03] hover:bg-[#003087]/95",
+          "fixed bottom-6 right-6 z-50 h-14 w-14 rounded-full border border-white/10 bg-[#111] p-0 text-white shadow-[0_8px_32px_rgba(0,0,0,0.5)] ring-2 ring-[#00A651]/40 transition hover:scale-[1.03] hover:bg-zinc-900",
         )}
         aria-label="Open Fortis Edge Assistant chat"
       >
@@ -33,9 +33,9 @@ export function ChatWidget() {
       <SheetContent
         side="right"
         showCloseButton={false}
-        className="flex w-full flex-col gap-0 p-0 sm:max-w-md"
+        className="flex w-full flex-col gap-0 border-l border-white/10 bg-[#0a0a0a] p-0 sm:max-w-md"
       >
-        <SheetHeader className="border-b border-border px-6 py-4 text-left">
+        <SheetHeader className="border-b border-white/10 px-6 py-4 text-left">
           <div className="flex items-start justify-between gap-2">
             <div>
               <SheetTitle>{FORTIS.productName} Assistant</SheetTitle>

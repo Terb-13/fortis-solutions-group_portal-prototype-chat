@@ -1,9 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Candy, PartyPopper, Snowflake } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { FORTIS } from "@/lib/constants";
 import { FORTIS_IMAGES } from "@/lib/fortis-images";
+import { FoldingCartonsShowcase } from "@/components/folding-cartons-showcase";
+import { MarketsMasonry } from "@/components/markets-masonry";
 import { cn } from "@/lib/utils";
 
 export const metadata = {
@@ -79,68 +82,61 @@ const marketHealthBeauty = [
   },
 ] as const;
 
+const seasonalVectors = [
+  {
+    label: "Ribbon & satin",
+    icon: Candy,
+    file: "/images/red-ribbon-vector-illustration-with-shiny-satin_23330134.ai",
+  },
+  {
+    label: "Winter snowflake",
+    icon: Snowflake,
+    file: "/images/snowflake_017.ai",
+  },
+  {
+    label: "Cinco & fiesta",
+    icon: PartyPopper,
+    file: "/images/cinco-de-mayo-concept.ai",
+  },
+] as const;
+
 export default function ProductsServicesPage() {
   return (
     <div>
       <div className="section-y mx-auto max-w-7xl px-4 md:px-6">
         <div className="mx-auto max-w-2xl text-center">
-          <h1 className="font-heading text-4xl font-semibold text-[#003087] md:text-5xl">
+          <h1 className="text-4xl font-semibold tracking-tight text-white md:text-5xl">
             Products &amp; services
           </h1>
-          <p className="mt-4 text-muted-foreground">
+          <p className="mt-4 text-zinc-500">
             Portal-led digital scope — full Fortis catalog with your team.
           </p>
         </div>
       </div>
 
-      <section className="section-y border-t border-border/50 bg-muted/15">
+      <section className="section-y border-t border-white/[0.06] bg-white/[0.02]">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
-          <h2 className="font-heading text-2xl font-semibold text-[#003087] md:text-3xl">
+          <h2 className="text-2xl font-semibold text-white md:text-3xl">
             Folding cartons
           </h2>
-          <p className="mt-2 max-w-2xl text-muted-foreground">
+          <p className="mt-2 max-w-2xl text-sm text-zinc-500">
             Hymes lock automatic bottom—structural rigidity for e‑commerce and
             retail.
           </p>
-          <div className="mt-8 grid gap-5 md:grid-cols-2">
-            <div className="overflow-hidden rounded-2xl border border-border/80 bg-card shadow-md">
-              <div className="relative aspect-[4/3] w-full sm:aspect-[3/2]">
-                <Image
-                  src={FORTIS_IMAGES.hymesLock01}
-                  alt="Fortis Edge Hymes lock automatic bottom folding carton view one"
-                  fill
-                  className="object-cover"
-                  sizes="(min-width: 768px) 40vw, 100vw"
-                  priority
-                />
-              </div>
-            </div>
-            <div className="overflow-hidden rounded-2xl border border-border/80 bg-card shadow-md">
-              <div className="relative aspect-[4/3] w-full sm:aspect-[3/2]">
-                <Image
-                  src={FORTIS_IMAGES.hymesLock02}
-                  alt="Fortis Edge Hymes lock automatic bottom folding carton view two"
-                  fill
-                  className="object-cover"
-                  sizes="(min-width: 768px) 40vw, 100vw"
-                />
-              </div>
-            </div>
-          </div>
+          <FoldingCartonsShowcase />
         </div>
       </section>
 
       <section className="section-y">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
-          <h2 className="font-heading text-2xl font-semibold text-[#003087] md:text-3xl">
+          <h2 className="text-2xl font-semibold text-white md:text-3xl">
             Flexible packaging
           </h2>
-          <p className="mt-2 max-w-2xl text-muted-foreground">
-            Premium sachet and flex formats—DALL·E concept mock for program
-            visualization.
+          <p className="mt-2 max-w-2xl text-sm text-zinc-500">
+            Premium sachet flex—DALL·E concept mock for program visualization.
           </p>
-          <div className="mt-8 overflow-hidden rounded-2xl border border-border/80 bg-card shadow-card">
-            <div className="relative aspect-[21/9] w-full min-h-[200px] sm:aspect-[2.2/1]">
+          <div className="mt-8 overflow-hidden glass-panel">
+            <div className="relative min-h-[200px] w-full aspect-[21/9] sm:aspect-[2.2/1]">
               <Image
                 src={FORTIS_IMAGES.flexSachetHero}
                 alt="Premium health and beauty sachet flexible packaging design mockup"
@@ -150,7 +146,7 @@ export default function ProductsServicesPage() {
                 priority
               />
             </div>
-            <p className="p-4 text-sm text-muted-foreground">
+            <p className="border-t border-white/[0.06] p-4 text-sm text-zinc-500">
               Shrink, flex, cartons, applicators — program by program. Confirm
               scope with your Fortis contact.
             </p>
@@ -158,17 +154,71 @@ export default function ProductsServicesPage() {
         </div>
       </section>
 
+      <section className="section-y border-t border-white/[0.06]">
+        <div className="mx-auto max-w-7xl px-4 md:px-6">
+          <h2 className="text-2xl font-semibold text-white md:text-3xl">
+            Seasonal &amp; special occasion packaging
+          </h2>
+          <p className="mt-2 max-w-2xl text-sm text-zinc-500">
+            Holiday photography plus Illustrator masters for fast-turn programs.
+          </p>
+          <div className="mt-8 grid gap-5 lg:grid-cols-2">
+            <div className="glass-panel overflow-hidden">
+              <div className="relative aspect-[4/3] w-full sm:aspect-[5/3]">
+                <Image
+                  src="/images/gift-with-label.jpg"
+                  alt="Labeled gift box with kraft paper and string—seasonal retail packaging"
+                  fill
+                  className="object-cover"
+                  sizes="(min-width: 1024px) 45vw, 100vw"
+                />
+              </div>
+              <div className="border-t border-white/[0.06] p-4 text-sm text-zinc-400">
+                Gift, ribbon &amp; retail hero — use in seasonal briefs.
+              </div>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
+              {seasonalVectors.map((s) => {
+                const Icon = s.icon;
+                return (
+                  <div
+                    key={s.label}
+                    className="flex flex-col justify-between gap-2 glass-panel p-4"
+                  >
+                    <div className="flex items-center gap-2">
+                      <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#00A651]/12 text-[#4ade80]">
+                        <Icon className="size-4" />
+                      </div>
+                      <p className="text-sm font-medium text-zinc-200">
+                        {s.label}
+                      </p>
+                    </div>
+                    <a
+                      href={s.file}
+                      className="text-xs font-medium text-[#4ade80] hover:underline"
+                      download
+                    >
+                      Vector (AI) →
+                    </a>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </section>
+
       <div className="section-y mx-auto max-w-7xl px-4 md:px-6">
-        <h2 className="text-center font-heading text-2xl font-semibold text-[#003087] md:text-3xl">
+        <h2 className="text-center text-2xl font-semibold text-white md:text-3xl">
           Full catalog (samples)
         </h2>
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {otherProducts.map((p) => (
             <article
               key={p.title}
-              className="group overflow-hidden rounded-2xl border border-border/80 bg-card shadow-card shadow-card-hover"
+              className="group glass-panel glass-panel-hover overflow-hidden"
             >
-              <div className="relative aspect-[4/3] overflow-hidden bg-muted">
+              <div className="relative aspect-[4/3] overflow-hidden bg-zinc-900/50">
                 <Image
                   src={p.img}
                   alt={p.alt}
@@ -181,12 +231,10 @@ export default function ProductsServicesPage() {
                 />
               </div>
               <div className="flex flex-wrap items-start justify-between gap-2 p-5">
-                <h2 className="font-heading text-lg font-semibold text-[#003087]">
-                  {p.title}
-                </h2>
+                <h2 className="text-lg font-semibold text-zinc-100">{p.title}</h2>
                 <Badge
                   variant="outline"
-                  className="shrink-0 border-0 bg-[#003087]/8 text-xs font-semibold text-[#003087]"
+                  className="shrink-0 border-0 bg-[#00A651]/10 text-xs font-semibold text-[#4ade80]"
                 >
                   Digital Only
                 </Badge>
@@ -196,64 +244,21 @@ export default function ProductsServicesPage() {
         </div>
       </div>
 
-      <section className="section-y border-t border-border/50 bg-muted/10">
+      <section className="section-y border-t border-white/[0.06] bg-white/[0.02]">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
-          <h2 className="text-center font-heading text-2xl font-semibold text-[#003087] md:text-3xl">
+          <h2 className="text-center text-2xl font-semibold text-white md:text-3xl">
             Markets we serve
           </h2>
-          <p className="mx-auto mt-3 max-w-2xl text-center text-muted-foreground">
-            Beverage and health &amp; beauty programs—masonry mix for rapid
-            scanning.
+          <p className="mx-auto mt-3 max-w-2xl text-center text-sm text-zinc-500">
+            Beverage and health &amp; beauty — masonry mix for program scanning.
           </p>
 
-          <p className="mt-8 font-heading text-sm font-semibold text-[#003087]">
-            Beverage
-          </p>
-          <div className="mt-4 columns-1 gap-4 sm:columns-2 lg:columns-3">
-            {marketBeverage.map((m) => (
-              <div
-                key={m.src}
-                className="mb-4 break-inside-avoid overflow-hidden rounded-2xl border border-border/80 bg-card shadow-sm"
-              >
-                <div className="relative aspect-[4/5] w-full">
-                  <Image
-                    src={m.src}
-                    alt={m.alt}
-                    fill
-                    className="object-cover"
-                    sizes="(min-width: 1024px) 32vw, (min-width: 640px) 48vw, 100vw"
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <p className="mt-10 font-heading text-sm font-semibold text-[#003087]">
-            Health &amp; beauty
-          </p>
-          <div className="mt-4 columns-1 gap-4 sm:columns-2 lg:columns-3">
-            {marketHealthBeauty.map((m) => (
-              <div
-                key={m.src}
-                className="mb-4 break-inside-avoid overflow-hidden rounded-2xl border border-border/80 bg-card shadow-sm"
-              >
-                <div className="relative aspect-[3/4] w-full sm:aspect-[4/5]">
-                  <Image
-                    src={m.src}
-                    alt={m.alt}
-                    fill
-                    className="object-cover"
-                    sizes="(min-width: 1024px) 32vw, (min-width: 640px) 48vw, 100vw"
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
+          <MarketsMasonry beverage={marketBeverage} healthBeauty={marketHealthBeauty} />
         </div>
       </section>
 
-      <div className="section-y mx-auto max-w-7xl px-4 pb-8 md:px-6">
-        <p className="mx-auto max-w-2xl text-center text-sm text-muted-foreground">
+      <div className="section-y mx-auto max-w-7xl px-4 pb-12 md:px-6">
+        <p className="mx-auto max-w-2xl text-center text-sm text-zinc-500">
           Shrink, flex, cartons, applicators — program by program. Confirm scope
           with your Fortis contact.
         </p>
@@ -262,7 +267,7 @@ export default function ProductsServicesPage() {
             href="/customer-portal"
             className={cn(
               buttonVariants({ size: "lg" }),
-              "bg-[#003087] text-white hover:bg-[#003087]/90",
+              "bg-[#00A651] text-white shadow-lg shadow-[#00A651]/20 hover:bg-[#00A651]/90",
             )}
           >
             Portal roadmap

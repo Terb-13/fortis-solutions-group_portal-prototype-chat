@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Menu } from "lucide-react";
 import { FortisLogo } from "@/components/fortis-logo";
+import { PortalStatusPill } from "@/components/portal-status-pill";
 import { TeamLoginDialog } from "@/components/team-login-dialog";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
@@ -36,8 +37,7 @@ function NavLink({
   onNavigate?: () => void;
 }) {
   const pathname = usePathname();
-  const active =
-    href === "/" ? pathname === "/" : pathname.startsWith(href);
+  const active = href === "/" ? pathname === "/" : pathname.startsWith(href);
   return (
     <Link
       href={href}
@@ -45,8 +45,8 @@ function NavLink({
       className={cn(
         "rounded-lg px-3 py-2 text-sm font-medium transition-colors",
         active
-          ? "bg-[#003087]/10 text-[#003087]"
-          : "text-muted-foreground hover:bg-muted hover:text-foreground",
+          ? "bg-[#00A651]/12 text-[#4ade80]"
+          : "text-zinc-400 hover:bg-white/[0.05] hover:text-zinc-100",
       )}
     >
       {children}
@@ -55,42 +55,35 @@ function NavLink({
 }
 
 export function SiteHeader({ className }: { className?: string }) {
-  const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
-  const headerLogoVariant =
-    pathname === "/benefits-impact" || pathname === "/faq" ? "black" : "default";
 
   return (
     <header
       className={cn(
-        "sticky top-0 z-50 border-b border-border/60 bg-background/90 shadow-[0_1px_0_rgba(0,48,135,0.06)] backdrop-blur-md supports-[backdrop-filter]:bg-background/85",
+        "sticky top-0 z-50 border-b border-white/[0.06] bg-[#0a0a0a]/75 shadow-[0_1px_0_rgba(0,166,81,0.06)] backdrop-blur-xl supports-[backdrop-filter]:bg-[#0a0a0a]/55",
         className,
       )}
     >
-      <div className="mx-auto flex max-w-7xl items-center gap-2 px-4 py-3 md:gap-4 md:px-6">
-        <FortisLogo
-          className="min-w-0 shrink"
-          variant={headerLogoVariant}
-          compact
-        />
+      <div className="mx-auto flex max-w-7xl items-center gap-2 px-4 py-3 md:gap-3 md:px-6">
+        <FortisLogo className="min-w-0 shrink" compact />
 
-        <nav
-          className="hidden min-w-0 flex-1 items-center justify-center gap-0.5 lg:flex xl:gap-1"
-          aria-label="Primary"
-        >
+        <div className="hidden min-w-0 flex-1 items-center justify-center gap-1.5 md:flex md:px-1 lg:gap-2">
           {nav.map((item) => (
             <NavLink key={item.href} href={item.href}>
               {item.label}
             </NavLink>
           ))}
-        </nav>
+        </div>
 
-        <div className="ml-auto flex shrink-0 items-center gap-2">
+        <div className="ml-auto flex shrink-0 items-center gap-2 md:gap-3">
+          <div className="hidden md:block">
+            <PortalStatusPill />
+          </div>
           <Button
             type="button"
             size="sm"
-            className="bg-[#00A651] px-3 font-semibold text-white shadow-sm transition hover:bg-[#00A651]/90 md:px-4"
+            className="bg-[#00A651] px-3 font-semibold text-white shadow-lg shadow-[#00A651]/20 transition hover:bg-[#00A651]/90 md:px-4"
             onClick={() => setLoginOpen(true)}
           >
             Team Login
@@ -100,20 +93,28 @@ export function SiteHeader({ className }: { className?: string }) {
             <SheetTrigger
               className={cn(
                 buttonVariants({ variant: "outline", size: "icon" }),
-                "lg:hidden",
+                "border-white/10 bg-white/[0.03] text-zinc-100 lg:hidden",
               )}
               aria-label="Open menu"
             >
               <Menu className="size-5" />
             </SheetTrigger>
-            <SheetContent side="right" className="w-[min(100vw,20rem)] gap-0 p-0">
-              <SheetHeader className="space-y-3 border-b px-4 py-4 text-left">
+            <SheetContent
+              side="right"
+              className="w-[min(100vw,20rem)] gap-0 border-l border-white/10 bg-[#0f0f0f] p-0"
+            >
+              <SheetHeader className="space-y-3 border-b border-white/10 px-4 py-4 text-left">
                 <FortisLogo
                   variant="stacked"
                   className="max-w-full"
                   priority={false}
                 />
-                <SheetTitle className="font-heading text-[#003087]">Menu</SheetTitle>
+                <div className="pt-1">
+                  <PortalStatusPill className="w-full" />
+                </div>
+                <SheetTitle className="font-heading text-left text-sm text-zinc-400">
+                  Menu
+                </SheetTitle>
               </SheetHeader>
               <nav
                 className="flex flex-col gap-1 p-3"

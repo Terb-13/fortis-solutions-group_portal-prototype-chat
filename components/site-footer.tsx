@@ -4,19 +4,20 @@ import { FORTIS } from "@/lib/constants";
 import { FORTIS_IMAGES } from "@/lib/fortis-images";
 import { cn } from "@/lib/utils";
 
-const FOOTER_LOGO_ALT = "Fortis Solutions Group — white logo for dark background";
+const FOOTER_LOGO_ALT = "Fortis Solutions Group — white logo";
 
 export function SiteFooter({ className }: { className?: string }) {
   return (
     <footer
-      className={cn(
-        "border-t border-border/60",
-        className,
-      )}
+      className={cn("border-t border-white/[0.06] bg-[#0a0a0a]/90", className)}
     >
-      <div className="bg-[#0b1220] text-zinc-100">
-        <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 md:grid-cols-2 md:px-6">
-          <div>
+      <div className="relative">
+        <div
+          className="pointer-events-none absolute inset-0 noise-overlay opacity-40"
+          aria-hidden
+        />
+        <div className="relative mx-auto grid max-w-7xl gap-10 px-4 py-14 md:grid-cols-2 md:px-6">
+          <div className="glass-panel p-6 md:p-8">
             <div className="relative h-10 w-44 sm:h-11 sm:w-48">
               <Image
                 src={FORTIS_IMAGES.logoWhite}
@@ -26,64 +27,44 @@ export function SiteFooter({ className }: { className?: string }) {
                 sizes="(min-width: 640px) 12rem, 11rem"
               />
             </div>
-            <p className="mt-3 max-w-sm text-sm leading-relaxed text-zinc-300">
+            <p className="mt-3 max-w-sm text-sm leading-relaxed text-zinc-400">
               {FORTIS.tagline}
             </p>
-            <p className="mt-4 text-sm text-zinc-400">
-              Commercial questions: your Fortis representative. This site is a
-              Tier 3 &amp; 4 positioning prototype.
+            <p className="mt-4 text-sm text-zinc-500">
+              Internal SBU updates and portal program status—confirm externally with
+              your Fortis team for commercial details.
             </p>
-            <p className="mt-5 text-xs text-zinc-500">
+            <p className="mt-5 text-xs text-zinc-600">
               {FORTIS.company}
             </p>
           </div>
           <div>
-            <p className="font-heading text-sm font-semibold text-zinc-100">
-              Explore
+            <p className="text-xs font-semibold uppercase tracking-wider text-zinc-500">
+              Navigate
             </p>
-            <ul className="mt-4 space-y-3 text-sm text-zinc-300">
-              <li>
-                <Link
-                  href="/customer-portal"
-                  className="transition hover:text-white"
-                >
-                  Customer Portal
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/timeline-roadmap"
-                  className="transition hover:text-white"
-                >
-                  Timeline
-                </Link>
-              </li>
-              <li>
-                <Link href="/faq" className="transition hover:text-white">
-                  FAQ
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/assistant"
-                  className="transition hover:text-white"
-                >
-                  Assistant
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/resources/brief"
-                  className="transition hover:text-white"
-                >
-                  Brief (PDF)
-                </Link>
-              </li>
+            <ul className="mt-4 space-y-3 text-sm text-zinc-400">
+              {[
+                { href: "/customer-portal", label: "Customer Portal" },
+                { href: "/timeline-roadmap", label: "Timeline" },
+                { href: "/faq", label: "FAQ" },
+                { href: "/assistant", label: "Assistant" },
+                { href: "/resources/brief", label: "Brief (PDF)" },
+                { href: "/dashboard", label: "Team dashboard" },
+              ].map((l) => (
+                <li key={l.href}>
+                  <Link
+                    href={l.href}
+                    className="transition hover:text-[#4ade80]"
+                  >
+                    {l.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
         </div>
-        <div className="border-t border-white/10 py-5 text-center text-xs text-zinc-500">
-          © {new Date().getFullYear()} {FORTIS.shortCompany} · Fortis Edge demo
+        <div className="border-t border-white/[0.06] py-5 text-center text-xs text-zinc-600">
+          © {new Date().getFullYear()} {FORTIS.shortCompany} · Fortis Edge internal
         </div>
       </div>
     </footer>

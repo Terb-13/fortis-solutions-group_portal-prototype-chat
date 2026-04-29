@@ -2,6 +2,9 @@
 
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { toast } from "sonner";
+import { motion } from "framer-motion";
+import { AnimatedNumber } from "@/components/animated-number";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -40,7 +43,7 @@ import {
 } from "@/lib/faq-store";
 import { FORTIS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
-import { Flag } from "lucide-react";
+import { Flag, MessagesSquare } from "lucide-react";
 
 type ReviewResult = {
   improvedBotResponse: string;
@@ -192,13 +195,23 @@ export function DashboardClient() {
         });
       }
       setSaveMsg("Existing FAQ updated in local store.");
+      toast.success("FAQ updated — saved to local store");
     } else {
       addCustomFaq({
         question: r.question,
         answer: r.answer,
         visible: newFaqPublished,
       });
-      setSaveMsg("New FAQ saved to local store.");
+      setSaveMsg(
+        newFaqPublished
+          ? "New FAQ saved (visible on site)."
+          : "New FAQ saved as draft in local store.",
+      );
+      if (newFaqPublished) {
+        toast.success("FAQ published — visible on FAQ page (local store)");
+      } else {
+        toast.success("FAQ saved as draft");
+      }
     }
     setFaqTick((x) => x + 1);
     refresh();
@@ -229,13 +242,14 @@ export function DashboardClient() {
         a.click();
         URL.revokeObjectURL(url);
       }
-      setSaveMsg(
-        data.wroteFile
-          ? "Saved data/faqs.json (dev or ALLOW_FAQ_FILE_WRITE)."
-          : data.message ?? "Downloaded faqs.json.",
-      );
+      const msg = data.wroteFile
+        ? "Saved data/faqs.json (dev or ALLOW_FAQ_FILE_WRITE)."
+        : data.message ?? "Downloaded faqs.json.";
+      setSaveMsg(msg);
+      toast.success(msg);
     } catch {
       setSaveMsg("Save request failed.");
+      toast.error("Save request failed");
     } finally {
       setSaveBusy(false);
     }
@@ -256,80 +270,123 @@ export function DashboardClient() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 md:px-6 md:py-14">
-      <div className="flex flex-wrap items-start justify-between gap-4 rounded-2xl border border-border/80 bg-card p-6 shadow-card md:p-8">
+      <motion.div
+        className="flex flex-wrap items-start justify-between gap-4 glass-panel p-6 md:p-8"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+      >
         <div>
-          <p className="text-xs font-bold uppercase tracking-wide text-[#00A651]">
+          <p className="text-xs font-bold uppercase tracking-wide text-[#4ade80]">
             Team
           </p>
-          <h1 className="mt-1 font-heading text-2xl font-semibold text-[#003087] md:text-3xl">
+          <h1 className="mt-1 text-2xl font-semibold text-white md:text-3xl">
             Dashboard
           </h1>
-          <p className="mt-2 max-w-xl text-sm text-muted-foreground">
+          <p className="mt-2 max-w-xl text-sm text-zinc-500">
             {FORTIS.productName} — conversations and FAQs stay in your browser;
             export when you are ready.
           </p>
         </div>
-        <Button variant="outline" onClick={() => void logout()}>
+        <Button
+          variant="outline"
+          className="border-white/10 bg-white/[0.04]"
+          onClick={() => void logout()}
+        >
           Sign out
         </Button>
-      </div>
+      </motion.div>
 
       <div className="mt-8 grid gap-4 sm:grid-cols-3">
-        <Card className="border-border/80 shadow-card">
-          <CardHeader className="pb-2">
-            <CardDescription>Total conversations</CardDescription>
-            <CardTitle className="font-heading text-3xl tabular-nums text-[#003087]">
-              {metrics.totalConversations}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="text-xs text-muted-foreground">
-            Assistant threads stored in this browser
-          </CardContent>
-        </Card>
-        <Card className="border-border/80 shadow-card">
-          <CardHeader className="pb-2">
-            <CardDescription>Corrections / FAQs added</CardDescription>
-            <CardTitle className="font-heading text-3xl tabular-nums text-[#003087]">
-              {metrics.correctionsTotal}{" "}
-              <span className="text-lg font-normal text-muted-foreground">
-                / {metrics.faqsAdded}
-              </span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="text-xs text-muted-foreground">
-            Message flags · custom FAQs in store
-          </CardContent>
-        </Card>
-        <Card className="border-border/80 shadow-card">
-          <CardHeader className="pb-2">
-            <CardDescription>Published FAQs vs hidden FAQs</CardDescription>
-            <CardTitle className="font-heading text-3xl tabular-nums text-[#003087]">
-              {metrics.published}{" "}
-              <span className="text-muted-foreground">/</span>{" "}
-              {metrics.hidden}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="text-xs text-muted-foreground">
-            Visible on site · draft or hidden
-          </CardContent>
-        </Card>
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.05 }}
+          whileHover={{ y: -4 }}
+          className="will-change-transform"
+        >
+          <Card className="border-white/[0.08] glass-panel transition-[box-shadow] hover:shadow-[0_12px_40px_-16px_rgba(0,166,81,0.18)]">
+            <CardHeader className="pb-2">
+              <CardDescription>Total conversations</CardDescription>
+              <CardTitle className="font-mono text-3xl tabular-nums text-[#4ade80]">
+                <AnimatedNumber value={metrics.totalConversations} />
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="text-xs text-zinc-500">
+              Assistant threads stored in this browser
+            </CardContent>
+          </Card>
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          whileHover={{ y: -4 }}
+          className="will-change-transform"
+        >
+          <Card className="border-white/[0.08] glass-panel transition-[box-shadow] hover:shadow-[0_12px_40px_-16px_rgba(0,166,81,0.18)]">
+            <CardHeader className="pb-2">
+              <CardDescription>Corrections / FAQs added</CardDescription>
+              <CardTitle className="font-mono text-3xl tabular-nums text-[#4ade80]">
+                <AnimatedNumber value={metrics.correctionsTotal} />{" "}
+                <span className="text-lg font-normal text-zinc-500">
+                  / <AnimatedNumber value={metrics.faqsAdded} />
+                </span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="text-xs text-zinc-500">
+              Message flags · custom FAQs in store
+            </CardContent>
+          </Card>
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.15 }}
+          whileHover={{ y: -4 }}
+          className="will-change-transform"
+        >
+          <Card className="border-white/[0.08] glass-panel transition-[box-shadow] hover:shadow-[0_12px_40px_-16px_rgba(0,166,81,0.18)]">
+            <CardHeader className="pb-2">
+              <CardDescription>Published FAQs vs hidden FAQs</CardDescription>
+              <CardTitle className="font-mono text-3xl tabular-nums text-[#4ade80]">
+                <AnimatedNumber value={metrics.published} />{" "}
+                <span className="text-zinc-500">/</span>{" "}
+                <AnimatedNumber value={metrics.hidden} />
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="text-xs text-zinc-500">
+              Visible on site · draft or hidden
+            </CardContent>
+          </Card>
+        </motion.div>
       </div>
 
       <Separator className="my-10" />
 
       {!selectedId ? (
         <div>
-          <h2 className="font-heading text-lg font-semibold text-[#003087]">
+          <h2 className="font-heading text-lg font-semibold text-zinc-100">
             Conversations
           </h2>
           <p className="mt-1 text-sm text-muted-foreground">
             Tap a conversation to open the full thread.
           </p>
           {rows.length === 0 ? (
-            <div className="mt-4 rounded-2xl border border-border/80 bg-card p-6 text-sm text-muted-foreground shadow-card">
-              No conversations yet. Use the site assistant, then refresh this
-              page.
-            </div>
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="glass-panel relative overflow-hidden p-8 md:p-10"
+        >
+          <div className="pointer-events-none absolute -right-16 -top-16 size-48 rounded-full bg-[#00A651]/10 blur-3xl" />
+          <MessagesSquare className="relative size-10 text-[#4ade80]" aria-hidden />
+          <p className="relative mt-4 text-lg font-semibold text-white">
+            No conversations yet
+          </p>
+          <p className="relative mt-2 max-w-md text-sm leading-relaxed text-zinc-500">
+            Open the assistant from any page and send a message — threads appear
+            here for review and FAQ workflows.
+          </p>
+        </motion.div>
           ) : (
             <>
               <div className="mt-4 space-y-3 md:hidden">
@@ -341,7 +398,7 @@ export function DashboardClient() {
                       setSelectedId(r.id);
                       setSelectedMessageId(null);
                     }}
-                    className="w-full rounded-2xl border border-border/80 bg-card p-4 text-left shadow-card transition hover:border-[#003087]/30 hover:bg-muted/30"
+                    className="w-full rounded-2xl border border-border/80 bg-card p-4 text-left shadow-card transition hover:border-[#00A651]/30 hover:bg-white/[0.04]"
                   >
                     <div className="flex items-start justify-between gap-2">
                       <span className="line-clamp-2 font-medium text-foreground">
@@ -358,7 +415,7 @@ export function DashboardClient() {
                       className={cn(
                         "mt-3 inline-flex rounded-full px-2 py-0.5 text-xs font-medium",
                         r.status === "needs_review"
-                          ? "bg-amber-100 text-amber-900"
+                          ? "bg-amber-500/15 text-amber-200"
                           : "bg-muted text-muted-foreground",
                       )}
                     >
@@ -370,7 +427,7 @@ export function DashboardClient() {
               </div>
               <div className="mt-4 hidden overflow-x-auto rounded-2xl border border-border/80 shadow-card md:block">
                 <table className="w-full min-w-[640px] text-left text-sm">
-                  <thead className="bg-[#003087] text-white">
+                  <thead className="bg-white/[0.06] text-zinc-200">
                     <tr>
                       <th className="p-3 font-semibold">Updated</th>
                       <th className="p-3 font-semibold">Preview</th>
@@ -401,7 +458,7 @@ export function DashboardClient() {
                             className={cn(
                               "rounded-full px-2 py-0.5 text-xs font-medium",
                               r.status === "needs_review"
-                                ? "bg-amber-100 text-amber-900"
+                                ? "bg-amber-500/15 text-amber-200"
                                 : "bg-muted text-muted-foreground",
                             )}
                           >
@@ -434,7 +491,7 @@ export function DashboardClient() {
           >
             ← Back to list
           </Button>
-          <h2 className="font-heading text-lg font-semibold text-[#003087]">
+          <h2 className="font-heading text-lg font-semibold text-zinc-100">
             Thread
           </h2>
           <ScrollArea className="h-[min(520px,60vh)] rounded-2xl border border-border/80 bg-card p-4 shadow-inner">
@@ -453,7 +510,7 @@ export function DashboardClient() {
                         type="button"
                         variant="ghost"
                         size="sm"
-                        className="h-7 shrink-0 gap-1 px-2 text-xs text-muted-foreground hover:text-[#003087]"
+                        className="h-7 shrink-0 gap-1 px-2 text-xs text-muted-foreground hover:text-zinc-100"
                         onClick={(e) => {
                           e.stopPropagation();
                           openFlagPanel(m.id);
@@ -486,10 +543,10 @@ export function DashboardClient() {
         <SheetContent
           side="right"
           showCloseButton
-          className="flex w-full flex-col gap-0 overflow-y-auto border-l-[#003087]/15 p-0 sm:max-w-lg"
+          className="flex w-full flex-col gap-0 overflow-y-auto border-l-white/10 p-0 sm:max-w-lg"
         >
           <SheetHeader className="border-b border-border/80 px-6 py-5 text-left">
-            <SheetTitle className="font-heading text-[#003087]">
+            <SheetTitle className="font-heading text-zinc-100">
               Review assistant response
             </SheetTitle>
             <SheetDescription>
@@ -521,7 +578,7 @@ export function DashboardClient() {
             </div>
             <Button
               type="button"
-              className="bg-[#003087] text-white hover:bg-[#003087]/90"
+              className="bg-[#00A651] text-white hover:bg-[#00A651]/90"
               disabled={reviewBusy || !selectedAssistantMessage}
               onClick={() => void runReview()}
             >
@@ -610,7 +667,7 @@ export function DashboardClient() {
                 </div>
                 <Button
                   type="button"
-                  className="w-full bg-[#003087] text-white hover:bg-[#003087]/90"
+                  className="w-full bg-[#00A651] text-white hover:bg-[#00A651]/90"
                   disabled={!reviewResult}
                   onClick={saveFaqFromReview}
                 >
@@ -645,7 +702,7 @@ export function DashboardClient() {
       <Separator className="my-10" />
 
       <div className="space-y-3 rounded-2xl border border-border/80 bg-card p-6 shadow-card">
-        <h2 className="font-heading text-lg font-semibold text-[#003087]">
+        <h2 className="font-heading text-lg font-semibold text-zinc-100">
           Export public FAQs
         </h2>
         <p className="text-sm text-muted-foreground">

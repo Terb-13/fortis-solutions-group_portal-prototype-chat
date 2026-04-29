@@ -71,9 +71,9 @@
     }
   ],
   "milestones": [
-    { "name": "Online proofing (Orem)", "date": "2026-03-01", "type": "target" },
-    { "name": "FlexLink", "date": "2026-03-15", "type": "target" },
-    { "name": "Split shipping", "date": "2026-04-30", "type": "target" },
-    { "name": "April 2026 portal update", "date": "2026-04-01", "type": "live" }
+    { "name": "Online proofing (Orem)", "date": "2026-03-01", "type": "target", "owner": "Edge Product Ops" },
+    { "name": "FlexLink", "date": "2026-03-15", "type": "target", "owner": "Marietta Platform" },
+    { "name": "Split shipping", "date": "2026-04-30", "type": "target", "owner": "CX Integrations" },
+    { "name": "April 2026 portal update", "date": "2026-04-01", "type": "live", "owner": "Edge SBU" }
   ]
 }

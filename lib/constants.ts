@@ -10,6 +10,12 @@ export const FORTIS = {
   orange: "#F5A623",
 } as const;
 
+/** Sticky header “Portal Status” for internal comms. */
+export const PORTAL_ROLLOUT = {
+  version: "v2.3",
+  percent: 87,
+} as const;
+
 /** Full narrative — use on PDF / deep pages only */
 export const FORTIS_CORE_STORY_VERBATIM =
   "Fortis Solutions Group creates outstanding packaging solutions that deliver industry-leading lead times, quality control, color management, and a true solutions-oriented approach. We help brands look better, sell more, protect products, reduce waste, and stand out on the shelf with premium pressure-sensitive labels, shrink sleeves, flexible packaging, folding cartons, and label applicators. Our Renew™ sustainable line supports the circular economy with wash-off/recyclable options. With over 1,100 passionate employees and strategic U.S. locations, we turn packaging into a competitive advantage.";
