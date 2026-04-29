@@ -5,7 +5,7 @@ import { FORTIS } from "@/lib/constants";
 export const metadata = {
   title: `Fortis Edge Assistant | ${FORTIS.productName}`,
   description:
-    "Grok-powered assistant for Fortis Edge Tier 3 & 4 programs, portal capabilities, and roadmap.",
+    "Fortis Edge assistant for Tier 3 & 4 programs, portal capabilities, and roadmap.",
 };
 
 export default function AssistantPage() {
@@ -16,9 +16,9 @@ export default function AssistantPage() {
           Fortis Edge Assistant
         </h1>
         <p className="text-muted-foreground">
-          Powered by Grok (xAI) with Fortis Edge definitions, portal brief
-          themes, Tier 3 &amp; 4 guidance, integrations, and roadmap dates.
-          The floating widget on every page continues this same conversation.
+          Guidance on Fortis Edge definitions, portal workflows, Tier 3 &amp; 4
+          programs, integrations, and roadmap dates. The floating widget on every
+          page continues this same conversation.
         </p>
       </div>
       <AssistantToolbar />

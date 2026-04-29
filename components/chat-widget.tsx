@@ -40,8 +40,8 @@ export function ChatWidget() {
             <div>
               <SheetTitle>{FORTIS.productName} Assistant</SheetTitle>
               <SheetDescription>
-                Grok-powered guidance for Tier 3 &amp; 4 programs, portal
-                workflows, and roadmap timing.
+                Guidance for Tier 3 &amp; 4 programs, portal workflows, and
+                roadmap timing.
               </SheetDescription>
             </div>
             <Button
