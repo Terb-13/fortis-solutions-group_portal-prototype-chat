@@ -8,17 +8,9 @@ import { textFromUIMessage } from "@/lib/message-text";
 
 export const maxDuration = 60;
 
-const DEFAULT_CHAT_BACKEND =
+const BACKEND_URL =
+  process.env.FORTIS_CHAT_BACKEND_URL ||
   "https://fortis-solutions-prototype-chat.vercel.app/chat";
-
-function resolveBackendUrl(): string {
-  const raw =
-    process.env.FORTIS_CHAT_BACKEND_URL?.trim() || DEFAULT_CHAT_BACKEND;
-  if (/^https?:\/\//i.test(raw)) return raw;
-  return `https://${raw.replace(/^\/+/, "")}`;
-}
-
-const BACKEND_URL = resolveBackendUrl();
 
 export async function POST(req: Request) {
   let parsed: unknown;
