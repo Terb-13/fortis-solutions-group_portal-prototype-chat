@@ -25,12 +25,15 @@ export async function POST(req: Request) {
 
   const body = parsed as {
     messages?: UIMessage[];
+    conversation_id?: string;
     session_id?: string;
     id?: string;
   };
 
   const messages = body.messages ?? [];
-  const sessionFromTransport = body.session_id ?? body.id;
+  /** Stable thread id from client (useChat `id`) or explicit conversation_id */
+  const threadFromClient =
+    body.conversation_id ?? body.session_id ?? body.id;
 
   let lastUser: UIMessage | undefined;
   for (let i = messages.length - 1; i >= 0; i--) {
@@ -49,15 +52,14 @@ export async function POST(req: Request) {
     });
   }
 
-  const upstreamPayload: { message: string; session_id?: string } = {
+  const upstreamPayload: { message: string; conversation_id?: string } = {
     message: userText,
   };
-  const sid =
-    sessionFromTransport != null &&
-    String(sessionFromTransport).trim() !== ""
-      ? String(sessionFromTransport)
+  const cid =
+    threadFromClient != null && String(threadFromClient).trim() !== ""
+      ? String(threadFromClient)
       : lastUser?.id;
-  if (sid) upstreamPayload.session_id = sid;
+  if (cid) upstreamPayload.conversation_id = cid;
 
   try {
     const response = await fetch(BACKEND_URL, {
