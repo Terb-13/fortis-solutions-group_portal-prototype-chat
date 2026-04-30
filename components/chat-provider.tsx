@@ -19,8 +19,6 @@ import {
 } from "@/lib/chat-storage";
 import { textFromUIMessage } from "@/lib/message-text";
 
-const DEFAULT_SESSION = "fortis-edge-session";
-
 function messagesStorageKey(sessionId: string) {
   return `fortis-edge-chat-active-${sessionId}`;
 }
@@ -58,10 +56,9 @@ type FortisChatContextValue = ReturnType<typeof useChat> & ChatExtras;
 const FortisChatContext = createContext<FortisChatContextValue | null>(null);
 
 export function FortisChatProvider({ children }: { children: React.ReactNode }) {
-  const [sessionId, setSessionId] = useState(DEFAULT_SESSION);
+  const [sessionId, setSessionId] = useState(() => newSessionId());
   const sessionIdRef = useRef(sessionId);
   sessionIdRef.current = sessionId;
-  const hydrated = useRef(false);
 
   const onFinish = useCallback(({ messages }: { messages: UIMessage[] }) => {
     persistConversationRow(sessionIdRef.current, messages);
@@ -76,35 +73,19 @@ export function FortisChatProvider({ children }: { children: React.ReactNode }) 
   const { messages, setMessages } = chat;
 
   useEffect(() => {
-    if (hydrated.current) return;
-    hydrated.current = true;
+    setActiveSessionId(sessionId);
+  }, [sessionId]);
+
+  useEffect(() => {
     try {
-      let raw = localStorage.getItem(messagesStorageKey(DEFAULT_SESSION));
-      if (!raw) {
-        raw = localStorage.getItem("fortis-edge-chat-active");
-        if (raw) {
-          localStorage.setItem(messagesStorageKey(DEFAULT_SESSION), raw);
-          localStorage.removeItem("fortis-edge-chat-active");
-        }
-      }
-      if (raw) {
-        const parsed = JSON.parse(raw) as UIMessage[];
-        if (parsed.length > 0) setMessages(parsed);
-      }
+      localStorage.removeItem("fortis-edge-chat-active");
+      localStorage.removeItem(
+        messagesStorageKey("fortis-edge-session"),
+      );
     } catch {
       /* ignore */
     }
-    setActiveSessionId(sessionIdRef.current);
-  }, [setMessages]);
-
-  useEffect(() => {
-    if (messages.length === 0) return;
-    localStorage.setItem(
-      messagesStorageKey(sessionId),
-      JSON.stringify(messages),
-    );
-    setActiveSessionId(sessionId);
-  }, [messages, sessionId]);
+  }, []);
 
   const startNewConversation = useCallback(() => {
     const sid = sessionIdRef.current;

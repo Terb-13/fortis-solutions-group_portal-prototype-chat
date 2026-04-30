@@ -7,9 +7,28 @@ import {
 
 export const maxDuration = 60;
 
-const BACKEND_URL =
-  process.env.FORTIS_CHAT_BACKEND_URL ||
+/** Default includes path `/chat`. Env often mistakenly omits `https://` — normalize so fetch() gets a valid URL. */
+const DEFAULT_CHAT_BACKEND =
   "https://fortis-solutions-prototype-chat.vercel.app/chat";
+
+function resolveBackendUrl(): string {
+  const raw = process.env.FORTIS_CHAT_BACKEND_URL?.trim();
+  if (!raw) return DEFAULT_CHAT_BACKEND;
+  const withScheme = /^https?:\/\//i.test(raw)
+    ? raw
+    : `https://${raw.replace(/^\/+/, "")}`;
+  try {
+    const u = new URL(withScheme);
+    if (!u.pathname || u.pathname === "/") {
+      u.pathname = "/chat";
+    }
+    return u.toString();
+  } catch {
+    return DEFAULT_CHAT_BACKEND;
+  }
+}
+
+const BACKEND_URL = resolveBackendUrl();
 
 export async function POST(req: Request) {
   let parsed: unknown;
