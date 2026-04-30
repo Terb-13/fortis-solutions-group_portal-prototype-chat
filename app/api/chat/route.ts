@@ -4,7 +4,6 @@ import {
   generateId,
   type UIMessage,
 } from "ai";
-import { textFromUIMessage } from "@/lib/message-text";
 
 export const maxDuration = 60;
 
@@ -25,50 +24,44 @@ export async function POST(req: Request) {
 
   const body = parsed as {
     messages?: UIMessage[];
+    id?: string;
     conversation_id?: string;
     session_id?: string;
-    id?: string;
   };
 
   const messages = body.messages ?? [];
-  /** Stable thread id from client (useChat `id`) or explicit conversation_id */
-  const threadFromClient =
-    body.conversation_id ?? body.session_id ?? body.id;
 
-  let lastUser: UIMessage | undefined;
-  for (let i = messages.length - 1; i >= 0; i--) {
-    if (messages[i].role === "user") {
-      lastUser = messages[i];
-      break;
-    }
-  }
+  const lastMessage = messages[messages.length - 1];
+  const userText =
+    (lastMessage?.parts?.find((p) => p.type === "text") as { text?: string })
+      ?.text ||
+    "";
 
-  const userText = lastUser ? textFromUIMessage(lastUser).trim() : "";
-
-  if (!userText) {
+  if (!userText.trim()) {
     return new Response(JSON.stringify({ error: "No message provided" }), {
       status: 400,
       headers: { "Content-Type": "application/json" },
     });
   }
 
-  const upstreamPayload: { message: string; conversation_id?: string } = {
-    message: userText,
-  };
-  const cid =
-    threadFromClient != null && String(threadFromClient).trim() !== ""
-      ? String(threadFromClient)
-      : lastUser?.id;
-  if (cid) upstreamPayload.conversation_id = cid;
+  const conversationId =
+    body.conversation_id ??
+    body.session_id ??
+    body.id ??
+    lastMessage?.id ??
+    undefined;
 
   try {
     const response = await fetch(BACKEND_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Accept: "text/event-stream, application/json, text/plain, */*",
+        Accept: "application/json, text/event-stream, text/plain, */*",
       },
-      body: JSON.stringify(upstreamPayload),
+      body: JSON.stringify({
+        message: userText,
+        conversation_id: conversationId,
+      }),
       signal: req.signal,
       cache: "no-store",
     });
@@ -79,7 +72,7 @@ export async function POST(req: Request) {
         JSON.stringify({
           error:
             "The assistant service returned an error. Please try again in a moment.",
-          detail: errorText.slice(0, 800),
+          detail: errorText,
         }),
         {
           status: response.status,
@@ -90,9 +83,10 @@ export async function POST(req: Request) {
 
     const ctype = response.headers.get("content-type") ?? "";
 
+    // FastAPI POST /chat returns JSON { reply, conversation_id }
     if (ctype.includes("application/json")) {
       const raw = await response.text();
-      const jsonStream = createUIMessageStream({
+      const stream = createUIMessageStream({
         originalMessages: messages,
         execute: async ({ writer }) => {
           const textId = generateId();
@@ -100,26 +94,20 @@ export async function POST(req: Request) {
           try {
             let delta = raw;
             try {
-              const data = JSON.parse(raw) as Record<string, unknown>;
-              if (typeof data.text === "string") delta = data.text;
-              else if (typeof data.message === "string") delta = data.message;
-              else if (typeof data.content === "string") delta = data.content;
+              const data = JSON.parse(raw) as { reply?: string };
+              if (typeof data.reply === "string") delta = data.reply;
             } catch {
-              /* use raw string */
+              /* use raw */
             }
             if (delta.length > 0) {
-              writer.write({
-                type: "text-delta",
-                id: textId,
-                delta,
-              });
+              writer.write({ type: "text-delta", id: textId, delta });
             }
           } finally {
             writer.write({ type: "text-end", id: textId });
           }
         },
       });
-      return createUIMessageStreamResponse({ stream: jsonStream });
+      return createUIMessageStreamResponse({ stream });
     }
 
     const stream = createUIMessageStream({
@@ -146,10 +134,10 @@ export async function POST(req: Request) {
             for (const line of lines) {
               const trimmed = line.trim();
               if (!trimmed.startsWith("data:")) continue;
-              const payloadStr = trimmed.slice(5).trim();
-              if (payloadStr === "[DONE]" || payloadStr === "") continue;
+              const payload = trimmed.slice(5).trim();
+              if (!payload || payload === "[DONE]") continue;
               try {
-                const data = JSON.parse(payloadStr) as { text?: string };
+                const data = JSON.parse(payload) as { text?: string };
                 if (data.text) {
                   writer.write({
                     type: "text-delta",
@@ -158,28 +146,7 @@ export async function POST(req: Request) {
                   });
                 }
               } catch {
-                /* ignore parse errors */
-              }
-            }
-          }
-
-          if (buffer.trim()) {
-            const trimmed = buffer.trim();
-            if (trimmed.startsWith("data:")) {
-              const payloadStr = trimmed.slice(5).trim();
-              if (payloadStr && payloadStr !== "[DONE]") {
-                try {
-                  const data = JSON.parse(payloadStr) as { text?: string };
-                  if (data.text) {
-                    writer.write({
-                      type: "text-delta",
-                      id: textId,
-                      delta: data.text,
-                    });
-                  }
-                } catch {
-                  /* ignore */
-                }
+                // ignore parse errors
               }
             }
           }
@@ -187,8 +154,6 @@ export async function POST(req: Request) {
           writer.write({ type: "text-end", id: textId });
         }
       },
-      onError: (error) =>
-        error instanceof Error ? error.message : "Assistant stream failed.",
     });
 
     return createUIMessageStreamResponse({ stream });
