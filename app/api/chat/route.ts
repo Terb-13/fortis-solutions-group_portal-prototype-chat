@@ -6,6 +6,7 @@ import {
 } from "ai";
 
 import { buildFortisKnowledgeBlockForChat } from "@/lib/knowledge/chat-context";
+import { composeProxiedUserPayload } from "@/lib/chat/build-backend-message";
 
 /** Pro / Fluid: up to 300s; Hobby caps lower — see Vercel plan limits. */
 export const maxDuration = 300;
@@ -70,9 +71,16 @@ export async function POST(req: Request) {
   }
 
   const knowledgeBlock = await buildFortisKnowledgeBlockForChat();
-  const messageForBackend = knowledgeBlock.trim()
-    ? `[Fortis knowledge base — use to answer accurately; do not quote this header.]\n\n${knowledgeBlock}\n\n----\n\nUser message:\n${userText}`
-    : userText;
+  const legacyLatestOnly = process.env.FORTIS_CHAT_TRANSCRIPT === "false";
+  const messageForBackend = legacyLatestOnly
+    ? knowledgeBlock.trim()
+      ? `[Fortis knowledge base — use to answer accurately; do not quote this header.]\n\n${knowledgeBlock}\n\n----\n\nUser message:\n${userText}`
+      : userText
+    : composeProxiedUserPayload({
+        knowledgeBlock,
+        messages,
+        fallbackLatestUserText: userText,
+      });
 
   const conversationId =
     body.conversation_id ??
