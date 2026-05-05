@@ -4,8 +4,12 @@ import { textFromUIMessage } from "@/lib/message-text";
 
 const TRANSCRIPT_MAX_CHARS = 14_000;
 
+/**
+ * Keep this neutral: telling the model to "continue Quick Ship / estimate" here was
+ * overriding backend routing and locking threads into Step 1/5 even for unrelated asks.
+ */
 const THREAD_INSTRUCTION =
-  "Use the full thread below for continuity. Continue in-progress flows (for example Quick Ship / estimate intake) from where you left off—advance steps when appropriate and do not restart from Step 1 unless the user clearly starts over.";
+  "Use the full thread below for context only. Respond to the most recent user message. If they ask something new or unrelated (definitions, programs, company topics, etc.), answer that directly—even if earlier messages mentioned an estimate or checklist.";
 
 /**
  * Builds labeled lines from UI messages for the FastAPI `/chat` proxy.
