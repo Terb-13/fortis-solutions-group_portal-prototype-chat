@@ -4,7 +4,7 @@ import { z } from "zod";
 import { fortisModel } from "@/lib/ai";
 import { FORTIS_SYSTEM_PROMPT } from "@/lib/fortis-system-prompt";
 
-export const maxDuration = 60;
+export const maxDuration = 300;
 
 const reviewSchema = z.object({
   improvedBotResponse: z.string(),

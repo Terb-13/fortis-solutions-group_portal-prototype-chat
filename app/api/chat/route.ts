@@ -5,30 +5,34 @@ import {
   type UIMessage,
 } from "ai";
 
-export const maxDuration = 60;
+/** Pro / Fluid: up to 300s; Hobby caps lower — see Vercel plan limits. */
+export const maxDuration = 300;
 
-/** Default includes path `/chat`. Env often mistakenly omits `https://` — normalize so fetch() gets a valid URL. */
-const DEFAULT_CHAT_BACKEND =
-  "https://fortis-solutions-prototype-chat.vercel.app/chat";
-
-function resolveBackendUrl(): string {
+/**
+ * FastAPI `POST /chat` URL (must be the Python backend, not this Next.js app).
+ * Normalizes missing `https://` and adds `/chat` when only the origin is given.
+ */
+function resolveBackendUrl(): string | null {
   const raw = process.env.FORTIS_CHAT_BACKEND_URL?.trim();
-  if (!raw) return DEFAULT_CHAT_BACKEND;
-  const withScheme = /^https?:\/\//i.test(raw)
-    ? raw
-    : `https://${raw.replace(/^\/+/, "")}`;
-  try {
-    const u = new URL(withScheme);
-    if (!u.pathname || u.pathname === "/") {
-      u.pathname = "/chat";
+  if (raw) {
+    const withScheme = /^https?:\/\//i.test(raw)
+      ? raw
+      : `https://${raw.replace(/^\/+/, "")}`;
+    try {
+      const u = new URL(withScheme);
+      if (!u.pathname || u.pathname === "/") {
+        u.pathname = "/chat";
+      }
+      return u.toString();
+    } catch {
+      return null;
     }
-    return u.toString();
-  } catch {
-    return DEFAULT_CHAT_BACKEND;
   }
+  if (process.env.NODE_ENV === "development") {
+    return "http://127.0.0.1:8000/chat";
+  }
+  return null;
 }
-
-const BACKEND_URL = resolveBackendUrl();
 
 export async function POST(req: Request) {
   let parsed: unknown;
@@ -70,8 +74,19 @@ export async function POST(req: Request) {
     lastMessage?.id ??
     undefined;
 
+  const backendUrl = resolveBackendUrl();
+  if (!backendUrl) {
+    return new Response(
+      JSON.stringify({
+        error:
+          "Chat backend URL is not configured. Set FORTIS_CHAT_BACKEND_URL to your FastAPI deployment (POST /chat).",
+      }),
+      { status: 503, headers: { "Content-Type": "application/json" } },
+    );
+  }
+
   try {
-    const response = await fetch(BACKEND_URL, {
+    const response = await fetch(backendUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
