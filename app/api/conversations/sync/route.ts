@@ -3,6 +3,18 @@ import { z } from "zod";
 
 import { getSupabaseAdmin, isSupabaseAdminConfigured } from "@/lib/supabase/admin";
 
+function isPostgresUndefinedColumn(err: unknown): boolean {
+  return (
+    typeof err === "object" &&
+    err !== null &&
+    "code" in err &&
+    String((err as { code: unknown }).code) === "42703"
+  );
+}
+
+const SCHEMA_HINT =
+  "Apply supabase/migrations/20260505140000_fortis_conversations_legacy_backfill.sql in Supabase (adds `flags` and other columns when the table pre-existed).";
+
 const messageSchema = z.object({
   id: z.string().min(1),
   role: z.enum(["user", "assistant"]),
@@ -57,15 +69,20 @@ export async function POST(req: Request) {
 
   const { data: existing, error: readErr } = await supabase
     .from("fortis_conversations")
-    .select("flags, status")
+    .select("*")
     .eq("id", b.id)
     .maybeSingle();
 
   if (readErr) {
     console.error("fortis_conversations read:", readErr);
+    const status = isPostgresUndefinedColumn(readErr) ? 503 : 500;
     return NextResponse.json(
-      { ok: false, error: readErr.message },
-      { status: 500 },
+      {
+        ok: false,
+        error: readErr.message,
+        ...(isPostgresUndefinedColumn(readErr) ? { hint: SCHEMA_HINT } : {}),
+      },
+      { status },
     );
   }
 
@@ -90,9 +107,14 @@ export async function POST(req: Request) {
 
   if (convErr) {
     console.error("fortis_conversations upsert:", convErr);
+    const status = isPostgresUndefinedColumn(convErr) ? 503 : 500;
     return NextResponse.json(
-      { ok: false, error: convErr.message },
-      { status: 500 },
+      {
+        ok: false,
+        error: convErr.message,
+        ...(isPostgresUndefinedColumn(convErr) ? { hint: SCHEMA_HINT } : {}),
+      },
+      { status },
     );
   }
 
