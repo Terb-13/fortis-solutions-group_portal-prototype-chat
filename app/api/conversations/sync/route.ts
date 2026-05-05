@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 
 import { getSupabaseAdmin, isSupabaseAdminConfigured } from "@/lib/supabase/admin";
+import { remapFlagsMessageIds, resolveMessageDbId } from "@/lib/chat/resolve-message-db-id";
 
 function isPostgresUndefinedColumn(err: unknown): boolean {
   return (
@@ -86,8 +87,10 @@ export async function POST(req: Request) {
     );
   }
 
-  const flagsJson =
-    b.flags ?? (Array.isArray(existing?.flags) ? existing?.flags : []) ?? [];
+  const flagsJson = remapFlagsMessageIds(
+    b.flags ?? (Array.isArray(existing?.flags) ? existing?.flags : []) ?? [],
+    b.id,
+  );
   const statusValue =
     b.status ??
     (typeof existing?.status === "string" ? existing.status : null) ??
@@ -135,7 +138,7 @@ export async function POST(req: Request) {
 
   if (b.messages.length > 0) {
     const rows = b.messages.map((m, i) => ({
-      id: m.id,
+      id: resolveMessageDbId(b.id, m.id),
       conversation_id: b.id,
       role: m.role,
       content: m.content,
