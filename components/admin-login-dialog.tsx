@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -13,20 +13,19 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FORTIS } from "@/lib/constants";
+import { cn } from "@/lib/utils";
 
-type TeamLoginDialogProps = {
-  /** Controlled dialog (header owns trigger buttons) */
+type AdminLoginDialogProps = {
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
-  /** When false, only the modal is rendered — use with controlled `open` */
   showTrigger?: boolean;
 };
 
-export function TeamLoginDialog({
+export function AdminLoginDialog({
   open: controlledOpen,
   onOpenChange: controlledOnOpenChange,
   showTrigger = true,
-}: TeamLoginDialogProps) {
+}: AdminLoginDialogProps) {
   const router = useRouter();
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -36,6 +35,13 @@ export function TeamLoginDialog({
     controlledOpen !== undefined && controlledOnOpenChange !== undefined;
   const open = isControlled ? controlledOpen : internalOpen;
   const setOpen = isControlled ? controlledOnOpenChange : setInternalOpen;
+
+  useEffect(() => {
+    if (!open) {
+      setError(null);
+      setPassword("");
+    }
+  }, [open]);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -48,10 +54,9 @@ export function TeamLoginDialog({
         body: JSON.stringify({ password }),
       });
       if (!res.ok) {
-        setError("Invalid password.");
+        setError("That password is incorrect. Try again.");
         return;
       }
-      setPassword("");
       setOpen(false);
       router.push("/dashboard");
       router.refresh();
@@ -65,45 +70,61 @@ export function TeamLoginDialog({
       {showTrigger && (
         <Button
           type="button"
-          className="bg-[#00A651] font-semibold text-white shadow-sm transition hover:bg-[#00A651]/90"
+          size="sm"
+          className="bg-[#00A651] px-4 font-semibold text-white shadow-lg shadow-[#00A651]/18 transition hover:bg-[#00A651]/90"
           onClick={() => setOpen(true)}
         >
-          Team Login
+          Admin Login
         </Button>
       )}
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="font-heading text-lg text-[#003087]">
-              Team access
+        <DialogContent
+          showCloseButton
+          className={cn(
+            "sm:max-w-[400px] border-white/12 bg-[#101010] text-zinc-100 ring-1 ring-white/10",
+            "[&_[data-slot=dialog-title]]:text-zinc-50",
+            "[&_[data-slot=dialog-description]]:text-zinc-500",
+          )}
+        >
+          <DialogHeader className="space-y-1 text-left">
+            <p className="text-xs font-bold uppercase tracking-wide text-[#4ade80]">
+              Fortis Edge
+            </p>
+            <DialogTitle className="font-heading text-xl font-semibold text-white">
+              Admin sign in
             </DialogTitle>
-            <DialogDescription>
-              Sign in to the {FORTIS.productName} dashboard (demo password).
+            <DialogDescription className="text-sm leading-relaxed">
+              Enter the admin password to open the {FORTIS.productName} dashboard.
             </DialogDescription>
           </DialogHeader>
-          <form onSubmit={onSubmit} className="space-y-4 pt-2">
+          <form onSubmit={(e) => void onSubmit(e)} className="space-y-4 pt-2">
             <div className="grid gap-2">
-              <Label htmlFor="team-password">Password</Label>
+              <Label htmlFor="admin-password" className="text-zinc-300">
+                Password
+              </Label>
               <Input
-                id="team-password"
+                id="admin-password"
                 type="password"
                 autoComplete="current-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="h-11"
+                className="h-11 border-white/12 bg-white/[0.06] text-zinc-100 placeholder:text-zinc-600 focus-visible:border-[#00A651]/50 focus-visible:ring-[#00A651]/25"
               />
             </div>
             {error && (
-              <p className="text-sm text-destructive" role="alert">
+              <p
+                className="rounded-lg border border-red-500/25 bg-red-500/10 px-3 py-2 text-sm text-red-200"
+                role="alert"
+              >
                 {error}
               </p>
             )}
             <Button
               type="submit"
               disabled={busy}
-              className="h-11 w-full bg-[#003087] font-semibold text-white hover:bg-[#003087]/90"
+              className="h-11 w-full bg-[#00A651] font-semibold text-white shadow-md shadow-[#00A651]/20 hover:bg-[#00A651]/90"
             >
-              {busy ? "Signing in…" : "Enter dashboard"}
+              {busy ? "Signing in…" : "Sign in"}
             </Button>
           </form>
         </DialogContent>
