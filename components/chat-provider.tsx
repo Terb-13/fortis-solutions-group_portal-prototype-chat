@@ -13,6 +13,7 @@ import {
   useState,
 } from "react";
 import {
+  loadConversations,
   newSessionId,
   setActiveSessionId,
   upsertConversation,
@@ -62,6 +63,23 @@ export function FortisChatProvider({ children }: { children: React.ReactNode }) 
 
   const onFinish = useCallback(({ messages }: { messages: UIMessage[] }) => {
     persistConversationRow(sessionIdRef.current, messages);
+    const row = loadConversations().find((r) => r.id === sessionIdRef.current);
+    if (row) {
+      void fetch("/api/conversations/sync", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id: row.id,
+          title: row.title,
+          createdAt: row.createdAt,
+          updatedAt: row.updatedAt,
+          messages: row.messages,
+          status: row.status,
+        }),
+      }).catch(() => {
+        /* sync is best-effort */
+      });
+    }
   }, []);
 
   const chat = useChat({
@@ -91,6 +109,23 @@ export function FortisChatProvider({ children }: { children: React.ReactNode }) 
     const sid = sessionIdRef.current;
     if (messages.length > 0) {
       persistConversationRow(sid, messages);
+      const row = loadConversations().find((r) => r.id === sid);
+      if (row) {
+        void fetch("/api/conversations/sync", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            id: row.id,
+            title: row.title,
+            createdAt: row.createdAt,
+            updatedAt: row.updatedAt,
+            messages: row.messages,
+            status: row.status,
+          }),
+        }).catch(() => {
+          /* best-effort */
+        });
+      }
     }
     const next = newSessionId();
     setSessionId(next);

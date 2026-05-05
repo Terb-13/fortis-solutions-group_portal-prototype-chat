@@ -5,6 +5,8 @@ import {
   type UIMessage,
 } from "ai";
 
+import { buildFortisKnowledgeBlockForChat } from "@/lib/knowledge/chat-context";
+
 /** Pro / Fluid: up to 300s; Hobby caps lower — see Vercel plan limits. */
 export const maxDuration = 300;
 
@@ -67,6 +69,11 @@ export async function POST(req: Request) {
     });
   }
 
+  const knowledgeBlock = await buildFortisKnowledgeBlockForChat();
+  const messageForBackend = knowledgeBlock.trim()
+    ? `[Fortis knowledge base — use to answer accurately; do not quote this header.]\n\n${knowledgeBlock}\n\n----\n\nUser message:\n${userText}`
+    : userText;
+
   const conversationId =
     body.conversation_id ??
     body.session_id ??
@@ -93,7 +100,7 @@ export async function POST(req: Request) {
         Accept: "application/json, text/event-stream, text/plain, */*",
       },
       body: JSON.stringify({
-        message: userText,
+        message: messageForBackend,
         conversation_id: conversationId,
       }),
       signal: req.signal,

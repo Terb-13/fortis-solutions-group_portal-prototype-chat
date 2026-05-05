@@ -3,6 +3,15 @@ import type { NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  if (pathname.startsWith("/api/admin")) {
+    const auth = request.cookies.get("fortis-dashboard-auth");
+    if (auth?.value !== "authenticated") {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    return NextResponse.next();
+  }
+
   if (!pathname.startsWith("/dashboard")) {
     return NextResponse.next();
   }
@@ -17,5 +26,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard", "/dashboard/:path*"],
+  matcher: ["/dashboard", "/dashboard/:path*", "/api/admin/:path*"],
 };

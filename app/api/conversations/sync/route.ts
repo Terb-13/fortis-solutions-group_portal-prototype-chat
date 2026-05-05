@@ -1,0 +1,133 @@
+import { NextResponse } from "next/server";
+import { z } from "zod";
+
+import { getSupabaseAdmin, isSupabaseAdminConfigured } from "@/lib/supabase/admin";
+
+const messageSchema = z.object({
+  id: z.string().min(1),
+  role: z.enum(["user", "assistant"]),
+  content: z.string(),
+});
+
+const bodySchema = z.object({
+  id: z.string().uuid(),
+  title: z.string(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
+  messages: z.array(messageSchema),
+  /** Omit to keep existing flags in Supabase (e.g. operator review flags). */
+  status: z.enum(["active", "archived", "needs_review"]).optional(),
+  flags: z
+    .array(
+      z.object({
+        messageId: z.string(),
+        correctionNote: z.string().optional(),
+        createdAt: z.string(),
+      }),
+    )
+    .optional(),
+});
+
+/** Public: syncs assistant thread to Supabase for the admin dashboard (service role). */
+export async function POST(req: Request) {
+  if (!isSupabaseAdminConfigured()) {
+    return NextResponse.json(
+      { ok: false, error: "Supabase admin is not configured." },
+      { status: 503 },
+    );
+  }
+
+  let json: unknown;
+  try {
+    json = await req.json();
+  } catch {
+    return NextResponse.json({ ok: false, error: "Invalid JSON." }, { status: 400 });
+  }
+
+  const parsed = bodySchema.safeParse(json);
+  if (!parsed.success) {
+    return NextResponse.json(
+      { ok: false, error: "Invalid body.", issues: parsed.error.issues },
+      { status: 400 },
+    );
+  }
+
+  const b = parsed.data;
+  const supabase = getSupabaseAdmin();
+
+  const { data: existing, error: readErr } = await supabase
+    .from("fortis_conversations")
+    .select("flags, status")
+    .eq("id", b.id)
+    .maybeSingle();
+
+  if (readErr) {
+    console.error("fortis_conversations read:", readErr);
+    return NextResponse.json(
+      { ok: false, error: readErr.message },
+      { status: 500 },
+    );
+  }
+
+  const flagsJson =
+    b.flags ?? (Array.isArray(existing?.flags) ? existing?.flags : []) ?? [];
+  const statusValue =
+    b.status ??
+    (typeof existing?.status === "string" ? existing.status : null) ??
+    "active";
+
+  const { error: convErr } = await supabase.from("fortis_conversations").upsert(
+    {
+      id: b.id,
+      title: b.title.slice(0, 500),
+      status: statusValue,
+      flags: flagsJson,
+      created_at: b.createdAt,
+      updated_at: b.updatedAt,
+    },
+    { onConflict: "id" },
+  );
+
+  if (convErr) {
+    console.error("fortis_conversations upsert:", convErr);
+    return NextResponse.json(
+      { ok: false, error: convErr.message },
+      { status: 500 },
+    );
+  }
+
+  const { error: delErr } = await supabase
+    .from("fortis_messages")
+    .delete()
+    .eq("conversation_id", b.id);
+
+  if (delErr) {
+    console.error("fortis_messages delete:", delErr);
+    return NextResponse.json(
+      { ok: false, error: delErr.message },
+      { status: 500 },
+    );
+  }
+
+  if (b.messages.length > 0) {
+    const rows = b.messages.map((m, i) => ({
+      id: m.id,
+      conversation_id: b.id,
+      role: m.role,
+      content: m.content,
+      message_index: i,
+      created_at: b.updatedAt,
+    }));
+
+    const { error: insErr } = await supabase.from("fortis_messages").insert(rows);
+    if (insErr) {
+      console.error("fortis_messages insert:", insErr);
+      return NextResponse.json(
+        { ok: false, error: insErr.message },
+        { status: 500 },
+      );
+    }
+  }
+
+  return NextResponse.json({ ok: true });
+}
