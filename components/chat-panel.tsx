@@ -19,9 +19,25 @@ import { oneDark, oneLight } from "react-syntax-highlighter/dist/esm/styles/pris
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
+import { useFortisChat } from "@/components/chat-provider";
+import {
+  assistantTextLooksLikeEstimateWizard,
+  META_PHRASE_FALLBACK_REPLY,
+  userMessageContainsMetaPhrase,
+} from "@/lib/chat/meta-phrase-guard";
 import { textFromUIMessage } from "@/lib/message-text";
 import { cn } from "@/lib/utils";
-import { useFortisChat } from "@/components/chat-provider";
+
+function priorUserTextForIndex(
+  list: UIMessage[],
+  index: number,
+): string | null {
+  for (let j = index - 1; j >= 0; j--) {
+    const m = list[j];
+    if (m?.role === "user") return textFromUIMessage(m);
+  }
+  return null;
+}
 
 function reactNodeToPlainString(node: ReactNode): string {
   if (node == null || typeof node === "boolean") return "";
@@ -371,10 +387,31 @@ function ChatMessageMarkdown({ text, isUser }: { text: string; isUser: boolean }
   );
 }
 
-function Bubble({ message }: { message: UIMessage }) {
+function Bubble({
+  message,
+  priorUserText,
+}: {
+  message: UIMessage;
+  priorUserText: string | null;
+}) {
   const isUser = message.role === "user";
-  const text = textFromUIMessage(message);
-  if (!text.trim()) return null;
+  const raw = textFromUIMessage(message);
+  if (!raw.trim()) return null;
+
+  const shouldGuardAssistant =
+    !isUser &&
+    priorUserText != null &&
+    userMessageContainsMetaPhrase(priorUserText) &&
+    assistantTextLooksLikeEstimateWizard(raw);
+
+  const text = shouldGuardAssistant ? META_PHRASE_FALLBACK_REPLY : raw;
+
+  useEffect(() => {
+    if (shouldGuardAssistant) {
+      console.log("[CHAT GUARD] Meta phrase detected - skipping wizard");
+    }
+  }, [shouldGuardAssistant, message.id]);
+
   return (
     <div
       className={cn(
@@ -437,8 +474,12 @@ export function ChatPanel({
             Radius / Infigo / LabelTraxx.
             </p>
           )}
-          {messages.map((m) => (
-            <Bubble key={m.id} message={m} />
+          {messages.map((m, i) => (
+            <Bubble
+              key={m.id}
+              message={m}
+              priorUserText={priorUserTextForIndex(messages, i)}
+            />
           ))}
           {busy && (
             <div className="flex items-center gap-2 text-xs text-muted-foreground">

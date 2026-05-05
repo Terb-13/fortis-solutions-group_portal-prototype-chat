@@ -12,6 +12,21 @@ import { composeProxiedUserPayload } from "@/lib/chat/build-backend-message";
 export const maxDuration = 300;
 
 /**
+ * Troubleshooting (portal vs curl):
+ * - Set `FORTIS_CHAT_BACKEND_URL` to the FastAPI base that handles POST `/chat`, e.g.
+ *   https://fortis-solutions-prototype-chat.vercel.app/chat (no typos / stale preview URLs).
+ * - This route forwards `conversation_id` from the client session; the Python service may load
+ *   persisted flow state for that id, so behavior can differ from curl tests that omit it.
+ * - Set `FORTIS_CHAT_DEBUG_PROXY=1` to log outbound URL, conversation id, message length/previews,
+ *   and parsed reply metadata to Vercel/host logs (disable when done).
+ */
+
+function debugProxyEnabled(): boolean {
+  const v = process.env.FORTIS_CHAT_DEBUG_PROXY?.trim().toLowerCase();
+  return v === "1" || v === "true" || v === "yes";
+}
+
+/**
  * FastAPI `POST /chat` URL (must be the Python backend, not this Next.js app).
  * Normalizes missing `https://` and adds `/chat` when only the origin is given.
  */
@@ -117,6 +132,18 @@ export async function POST(req: Request) {
 
     if (!response.ok) {
       const errorText = await response.text();
+      if (debugProxyEnabled()) {
+        console.info(
+          "[fortis-chat-proxy] backend error",
+          JSON.stringify({
+            backendUrl,
+            status: response.status,
+            conversationId: conversationId ?? null,
+            messageLen: messageForBackend.length,
+            detailPreview: errorText.slice(0, 500),
+          }),
+        );
+      }
       return new Response(
         JSON.stringify({
           error:
@@ -135,6 +162,39 @@ export async function POST(req: Request) {
     // FastAPI POST /chat returns JSON { reply, conversation_id }
     if (ctype.includes("application/json")) {
       const raw = await response.text();
+      if (debugProxyEnabled()) {
+        const hdr = (name: string) => response.headers.get(name) ?? null;
+        let parsed: Record<string, unknown> | null = null;
+        try {
+          parsed = JSON.parse(raw) as Record<string, unknown>;
+        } catch {
+          parsed = null;
+        }
+        const reply =
+          parsed && typeof parsed.reply === "string" ? parsed.reply : null;
+        console.info(
+          "[fortis-chat-proxy] json response",
+          JSON.stringify({
+            backendUrl,
+            conversationId: conversationId ?? null,
+            transcriptMode: legacyLatestOnly ? "latest-only" : "full",
+            messageLen: messageForBackend.length,
+            messageStart: messageForBackend.slice(0, 220),
+            messageEnd: messageForBackend.slice(-220),
+            xEstimateFlowBuild: hdr("x-estimate-flow-build"),
+            replyLen: reply?.length ?? null,
+            replyStart: reply ? reply.slice(0, 320) : null,
+            estimate_id:
+              parsed && "estimate_id" in parsed
+                ? parsed.estimate_id
+                : undefined,
+            backendConversationId:
+              parsed && typeof parsed.conversation_id === "string"
+                ? parsed.conversation_id
+                : undefined,
+          }),
+        );
+      }
       const stream = createUIMessageStream({
         originalMessages: messages,
         execute: async ({ writer }) => {
