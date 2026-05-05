@@ -396,21 +396,23 @@ function Bubble({
 }) {
   const isUser = message.role === "user";
   const raw = textFromUIMessage(message);
-  if (!raw.trim()) return null;
-
+  const trimmed = raw.trim();
   const shouldGuardAssistant =
+    trimmed.length > 0 &&
     !isUser &&
     priorUserText != null &&
     userMessageContainsMetaPhrase(priorUserText) &&
     assistantTextLooksLikeEstimateWizard(raw);
-
-  const text = shouldGuardAssistant ? META_PHRASE_FALLBACK_REPLY : raw;
 
   useEffect(() => {
     if (shouldGuardAssistant) {
       console.log("[CHAT GUARD] Meta phrase detected - skipping wizard");
     }
   }, [shouldGuardAssistant, message.id]);
+
+  if (!trimmed) return null;
+
+  const text = shouldGuardAssistant ? META_PHRASE_FALLBACK_REPLY : raw;
 
   return (
     <div
