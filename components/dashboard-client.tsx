@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReactNode } from "react";
+import type { ReactNode, MouseEvent } from "react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -792,7 +792,7 @@ export function DashboardClient() {
                                 variant="ghost"
                                 size="sm"
                                 className="h-7 shrink-0 gap-1 px-2 text-xs text-muted-foreground hover:text-zinc-100"
-                                onClick={(e) => {
+                                onClick={(e: MouseEvent<HTMLButtonElement>) => {
                                   e.stopPropagation();
                                   openFlagPanel(m.id);
                                 }}

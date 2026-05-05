@@ -49,7 +49,7 @@ export async function GET(req: Request) {
 
   const out = (conversations ?? []).map((c: Record<string, unknown>) => {
     const cid = c.id as string;
-    const msgs = (byConv.get(cid) ?? []).map((row) => ({
+    const msgs = (byConv.get(cid) ?? []).map((row: Record<string, unknown>) => ({
       id: row.id as string,
       role: row.role as "user" | "assistant",
       content: row.content as string,

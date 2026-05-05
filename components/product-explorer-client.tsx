@@ -80,7 +80,12 @@ export function ProductExplorerClient({ products }: { products: Product[] }) {
         ))}
       </div>
 
-      <Dialog open={!!active} onOpenChange={(o) => !o && setOpenId(null)}>
+      <Dialog
+        open={!!active}
+        onOpenChange={(open: boolean) => {
+          if (!open) setOpenId(null);
+        }}
+      >
         <DialogContent className="max-h-[90vh] max-w-lg overflow-y-auto">
           {active && (
             <>
