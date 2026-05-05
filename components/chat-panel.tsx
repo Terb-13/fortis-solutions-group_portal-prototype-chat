@@ -27,8 +27,10 @@ function reactNodeToPlainString(node: ReactNode): string {
   if (node == null || typeof node === "boolean") return "";
   if (typeof node === "string" || typeof node === "number") return String(node);
   if (Array.isArray(node)) return node.map(reactNodeToPlainString).join("");
-  if (isValidElement(node))
-    return reactNodeToPlainString(node.props.children);
+  if (isValidElement(node)) {
+    const { children } = node.props as { children?: ReactNode };
+    return reactNodeToPlainString(children);
+  }
   return "";
 }
 
