@@ -96,7 +96,7 @@ export async function POST(req: Request) {
   const { error: convErr } = await supabase.from("fortis_conversations").upsert(
     {
       id: b.id,
-      channel: "web",
+      channel: "portal",
       channel_ref: null,
       title: b.title.slice(0, 500),
       status: statusValue,
