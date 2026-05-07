@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { isDashboardAuthenticated } from "@/lib/auth/dashboard-session";
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (pathname.startsWith("/api/admin")) {
-    const auth = request.cookies.get("fortis-dashboard-auth");
-    if (auth?.value !== "authenticated") {
+    if (!(await isDashboardAuthenticated(request))) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
     return NextResponse.next();
@@ -18,8 +18,7 @@ export function middleware(request: NextRequest) {
   if (pathname === "/dashboard/login") {
     return NextResponse.next();
   }
-  const auth = request.cookies.get("fortis-dashboard-auth");
-  if (auth?.value !== "authenticated") {
+  if (!(await isDashboardAuthenticated(request))) {
     return NextResponse.redirect(new URL("/dashboard/login", request.url));
   }
   return NextResponse.next();
