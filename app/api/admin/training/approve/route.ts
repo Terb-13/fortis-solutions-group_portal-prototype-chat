@@ -21,7 +21,7 @@ const bodySchema = z.object({
 });
 
 export async function POST(req: Request) {
-  if (!isDashboardAuthenticated(req)) {
+  if (!(await isDashboardAuthenticated(req))) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
   if (!isSupabaseAdminConfigured()) {

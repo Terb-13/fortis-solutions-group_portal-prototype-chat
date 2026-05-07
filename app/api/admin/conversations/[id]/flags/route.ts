@@ -18,7 +18,7 @@ const bodySchema = z.object({
 type Params = { params: Promise<{ id: string }> };
 
 export async function PATCH(req: Request, context: Params) {
-  if (!isDashboardAuthenticated(req)) {
+  if (!(await isDashboardAuthenticated(req))) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
   if (!isSupabaseAdminConfigured()) {

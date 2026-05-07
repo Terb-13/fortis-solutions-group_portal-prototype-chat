@@ -10,7 +10,7 @@ function monthStartUtcIso(reference = new Date()): string {
 }
 
 export async function GET(req: Request) {
-  if (!isDashboardAuthenticated(req)) {
+  if (!(await isDashboardAuthenticated(req))) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
   if (!isSupabaseAdminConfigured()) {

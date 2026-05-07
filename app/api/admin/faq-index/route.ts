@@ -6,7 +6,7 @@ import type { FaqItem } from "@/lib/faqs";
 import { getSupabaseAdmin, isSupabaseAdminConfigured } from "@/lib/supabase/admin";
 
 export async function GET(req: Request) {
-  if (!isDashboardAuthenticated(req)) {
+  if (!(await isDashboardAuthenticated(req))) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
