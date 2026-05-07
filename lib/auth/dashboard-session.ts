@@ -19,7 +19,7 @@ async function importHmacKey(
 ): Promise<CryptoKey> {
   return crypto.subtle.importKey(
     "raw",
-    secret,
+    secret as BufferSource,
     { name: "HMAC", hash: "SHA-256" },
     false,
     [usage],
@@ -61,7 +61,7 @@ export async function signDashboardSession(): Promise<string | null> {
   const sigBuf = await crypto.subtle.sign(
     "HMAC",
     key,
-    TEXT_ENCODER.encode(expStr),
+    TEXT_ENCODER.encode(expStr) as BufferSource,
   );
   return `${expStr}.${toBase64Url(sigBuf)}`;
 }
@@ -102,8 +102,8 @@ export async function isDashboardAuthenticated(
   const ok = await crypto.subtle.verify(
     "HMAC",
     key,
-    sig,
-    TEXT_ENCODER.encode(expStr),
+    sig as BufferSource,
+    TEXT_ENCODER.encode(expStr) as BufferSource,
   );
   if (!ok) return false;
 
