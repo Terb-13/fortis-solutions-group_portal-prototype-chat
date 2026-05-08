@@ -64,8 +64,6 @@ export async function POST(req: Request) {
       content: b.improvedBotResponse,
       source: "admin_training",
       published: true,
-      conversation_id: b.conversationId ?? null,
-      assistant_message_id: b.assistantMessageId ?? null,
       created_at: now,
       updated_at: now,
     });
