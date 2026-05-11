@@ -65,7 +65,6 @@ export async function POST(req: Request) {
       source: "admin_training",
       published: true,
       created_at: now,
-      updated_at: now,
     });
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
