@@ -145,14 +145,10 @@ export async function POST(req: Request) {
         );
       }
       return new Response(
-        JSON.stringify({
-          error:
-            "The assistant service returned an error. Please try again in a moment.",
-          detail: errorText,
-        }),
+        "Sorry, something went wrong sending that message. Please send it again in a moment.",
         {
           status: response.status,
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "text/plain; charset=utf-8" },
         },
       );
     }
