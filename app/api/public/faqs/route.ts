@@ -1,14 +1,15 @@
 import { NextResponse } from "next/server";
 
 import type { FaqItem } from "@/lib/faqs";
-import { createSupabaseClient } from "@/lib/supabase/client";
+import { getSupabaseAdmin } from "@/lib/supabase/admin";
 
 /**
- * Published FAQs from Supabase (anon + RLS). Safe to call from the public FAQ page.
+ * Published FAQs from Supabase (service role, server-only).
+ * The published filter is what the public FAQ page is allowed to see.
  */
 export async function GET() {
   try {
-    const supabase = createSupabaseClient();
+    const supabase = getSupabaseAdmin();
     const { data, error } = await supabase
       .from("fortis_faq")
       .select("id, question, answer, category, sort_order")

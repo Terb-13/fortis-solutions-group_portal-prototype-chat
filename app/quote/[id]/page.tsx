@@ -2,39 +2,26 @@ import { notFound } from "next/navigation";
 
 import { QuoteDocument } from "@/components/quote/QuoteDocument";
 import { QuoteConfigurationError, QuoteFetchError } from "@/components/quote/QuoteStates";
-import { mapEstimateRow } from "@/lib/quote/map-estimate-row";
-import { createSupabaseClient } from "@/lib/supabase/client";
+import { loadEstimateForQuote } from "@/lib/quote/load-estimate";
 
-const UUID_RE =
-  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+export const dynamic = "force-dynamic";
 
 type PageProps = {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 };
 
 export default async function QuotePage({ params }: PageProps) {
-  const id = params.id?.trim() ?? "";
-  if (!UUID_RE.test(id)) {
-    notFound();
-  }
+  const { id } = await params;
+  const result = await loadEstimateForQuote(id ?? "");
 
-  let supabase: ReturnType<typeof createSupabaseClient>;
-  try {
-    supabase = createSupabaseClient();
-  } catch {
+  if (result.ok) {
+    return <QuoteDocument quote={result.quote} />;
+  }
+  if (result.reason === "not-configured") {
     return <QuoteConfigurationError />;
   }
-
-  const { data, error } = await supabase.from("fortis_estimates").select("*").eq("id", id).maybeSingle();
-
-  if (error) {
-    return <QuoteFetchError message={error.message} />;
+  if (result.reason === "fetch-error") {
+    return <QuoteFetchError message={result.message} />;
   }
-
-  const quote = mapEstimateRow(data as Record<string, unknown> | null);
-  if (!quote) {
-    notFound();
-  }
-
-  return <QuoteDocument quote={quote} />;
+  notFound();
 }

@@ -1,10 +1,12 @@
+import "server-only";
+
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
 let cached: SupabaseClient | null = null;
 
 /**
  * Server-only Supabase client with the service role key (bypasses RLS).
- * Use only in Route Handlers / Server Actions — never import from client bundles.
+ * Use only from Server Components, Route Handlers, or Server Actions — never from client bundles.
  */
 export function getSupabaseAdmin(): SupabaseClient {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;

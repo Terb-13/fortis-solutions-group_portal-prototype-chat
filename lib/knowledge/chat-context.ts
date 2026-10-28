@@ -1,14 +1,14 @@
-import { createSupabaseClient } from "@/lib/supabase/client";
+import { getSupabaseAdmin } from "@/lib/supabase/admin";
 
 const MAX_CHARS = 12000;
 
 /**
  * Builds a compact text block of published knowledge + FAQs for the chat backend.
- * Uses the public anon key + RLS (published rows only).
+ * Service role on the server; the published filter keeps unpublished rows out.
  */
 export async function buildFortisKnowledgeBlockForChat(): Promise<string> {
   try {
-    const supabase = createSupabaseClient();
+    const supabase = getSupabaseAdmin();
     const [kbRes, faqRes] = await Promise.all([
       supabase
         .from("fortis_knowledge")
