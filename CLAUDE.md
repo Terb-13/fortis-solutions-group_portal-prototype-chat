@@ -69,12 +69,12 @@ There is **no test suite on the frontend yet**. This is a known debt — see §1
 
 Live in `.env.local` for dev, in Vercel project settings for prod. Required:
 
-- `NEXT_PUBLIC_SUPABASE_URL` — Supabase project URL
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY` — anon key for quote-read access
+- `NEXT_PUBLIC_SUPABASE_URL` — Supabase project URL (read on the server; not a secret)
+- `SUPABASE_SERVICE_ROLE_KEY` — server-only key for quote reads and admin APIs. No `NEXT_PUBLIC_` prefix.
 - `FORTIS_CHAT_BACKEND_URL` — FastAPI backend URL (Vercel today, Railway after migration)
 - `ADMIN_PASSWORD` (or similar) — for cookie-based admin auth
 
-Always use `NEXT_PUBLIC_` prefix only for values that are safe in browser code. **Never expose the Supabase service role key here.**
+Always use `NEXT_PUBLIC_` prefix only for values that are safe in browser code. **Never expose the Supabase service role key here.** The public quote page does not use the anon key.
 
 ## Conventions
 
@@ -101,7 +101,7 @@ Always use `NEXT_PUBLIC_` prefix only for values that are safe in browser code. 
 ## Things Not To Touch
 
 - **`supabase/` migrations**: which folder is the canonical schema source — `fortis-chatbot/sql/` or `fortis-frontend/supabase/` — has not been verified. Don't create or modify migrations until that's resolved (see §11 item 13 in the architecture doc). When in doubt, ask Brett.
-- **The Supabase anon key in code** is intentional. Don't move it server-side or assume it's a leak — it's the public read key for quote pages.
+- **Do not read `fortis_*` from the browser or with the anon key.** Quote pages load `fortis_estimates` in `lib/quote/load-estimate.ts` via the service role (`import "server-only"`).
 - **Don't add new authentication frameworks.** The cookie-based admin auth is intentionally minimal for the prototype phase.
 
 ## Phase 2 Notes (for future work)
