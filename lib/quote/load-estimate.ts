@@ -22,20 +22,19 @@ const PUBLIC_ESTIMATE_COLUMNS = [
 ].join(", ");
 
 export type LoadEstimateResult =
-  | { ok: false; reason: "invalid-id" }
-  | { ok: false; reason: "not-configured" }
-  | { ok: false; reason: "fetch-error"; message: string }
   | { ok: false; reason: "not-found" }
+  | { ok: false; reason: "not-configured" }
+  | { ok: false; reason: "fetch-error" }
   | { ok: true; quote: QuoteDisplay };
 
 /**
  * Loads one estimate for the public quote page.
- * Service role, server-only. Rejects anything that is not a UUID before querying.
+ * Service role, server-only. A non-UUID id is treated as not found.
  */
 export async function loadEstimateForQuote(id: string): Promise<LoadEstimateResult> {
   const trimmed = id.trim();
   if (!UUID_RE.test(trimmed)) {
-    return { ok: false, reason: "invalid-id" };
+    return { ok: false, reason: "not-found" };
   }
 
   if (!isSupabaseAdminConfigured()) {
@@ -50,7 +49,8 @@ export async function loadEstimateForQuote(id: string): Promise<LoadEstimateResu
     .maybeSingle();
 
   if (error) {
-    return { ok: false, reason: "fetch-error", message: error.message };
+    console.error("Failed to load quote estimate", error);
+    return { ok: false, reason: "fetch-error" };
   }
 
   const quote = mapEstimateRow(data as Record<string, unknown> | null);

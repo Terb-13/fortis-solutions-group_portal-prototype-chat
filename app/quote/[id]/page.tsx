@@ -12,7 +12,7 @@ type PageProps = {
 
 export default async function QuotePage({ params }: PageProps) {
   const { id } = await params;
-  const result = await loadEstimateForQuote(id ?? "");
+  const result = await loadEstimateForQuote(id);
 
   if (result.ok) {
     return <QuoteDocument quote={result.quote} />;
@@ -21,7 +21,7 @@ export default async function QuotePage({ params }: PageProps) {
     return <QuoteConfigurationError />;
   }
   if (result.reason === "fetch-error") {
-    return <QuoteFetchError message={result.message} />;
+    return <QuoteFetchError />;
   }
   notFound();
 }

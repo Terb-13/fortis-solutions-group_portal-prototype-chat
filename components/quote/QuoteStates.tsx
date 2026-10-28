@@ -13,7 +13,7 @@ export function QuoteConfigurationError() {
   );
 }
 
-export function QuoteFetchError({ message }: { message: string }) {
+export function QuoteFetchError() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center px-4 py-16">
       <div className="max-w-lg rounded-lg border border-red-200 bg-red-50 px-6 py-8 shadow-sm">
@@ -22,7 +22,6 @@ export function QuoteFetchError({ message }: { message: string }) {
           This may be a temporary problem loading the quote. Try again, or contact your administrator if it
           continues.
         </p>
-        <p className="mt-4 rounded-md bg-white/80 px-3 py-2 font-mono text-xs text-red-800">{message}</p>
         <p className="mt-6">
           <Link
             href="/"
