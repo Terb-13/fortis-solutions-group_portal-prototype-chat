@@ -576,11 +576,7 @@ export function DashboardClient() {
             <>
               {dataSource === "local" && (
                 <div className="rounded-xl border border-amber-500/25 bg-amber-500/10 px-4 py-3 text-sm text-amber-100">
-                  Set{" "}
-                  <code className="rounded bg-black/20 px-1 text-xs">
-                    SUPABASE_SERVICE_ROLE_KEY
-                  </code>{" "}
-                  on the server and apply the SQL migration in{" "}
+                  Set the server database credentials and apply the SQL migration in{" "}
                   <code className="rounded bg-black/20 px-1 text-xs">
                     supabase/migrations
                   </code>{" "}
@@ -852,11 +848,7 @@ export function DashboardClient() {
                   Estimates
                 </h2>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  Search by customer or company name. Rows come from{" "}
-                  <code className="rounded bg-white/5 px-1 text-xs">
-                    fortis_estimates
-                  </code>
-                  .
+                  Search by customer or company name. Rows come from the estimates table.
                 </p>
               </div>
               <div className="max-w-md">
@@ -944,8 +936,7 @@ export function DashboardClient() {
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="text-xs text-zinc-500">
-                    Rows created in{" "}
-                    <code className="rounded bg-white/5 px-1">fortis_estimates</code>
+                    Rows created in the estimates table
                   </CardContent>
                 </Card>
                 <Card className="border-white/[0.08] glass-panel">
@@ -958,10 +949,7 @@ export function DashboardClient() {
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="text-xs text-zinc-500">
-                    Threads synced to{" "}
-                    <code className="rounded bg-white/5 px-1">
-                      fortis_conversations
-                    </code>
+                    Threads synced to the conversations table
                   </CardContent>
                 </Card>
                 <Card className="border-white/[0.08] glass-panel">
@@ -1011,9 +999,7 @@ export function DashboardClient() {
             </SheetTitle>
             <SheetDescription>
               Grok proposes a safer reply plus FAQ changes. Approve to write into
-              Supabase (<code className="text-xs">fortis_knowledge</code>,{" "}
-              <code className="text-xs">fortis_faq</code>
-              ).
+              Supabase (knowledge and FAQ rows).
             </SheetDescription>
           </SheetHeader>
 
@@ -1094,7 +1080,7 @@ export function DashboardClient() {
                     <Switch
                       checked={applyKnowledge}
                       onCheckedChange={setApplyKnowledge}
-                      aria-label="Save approved reply to fortis_knowledge"
+                      aria-label="Save approved reply as a knowledge snippet"
                     />
                     <span className="text-xs font-medium text-foreground">On</span>
                   </div>
@@ -1103,7 +1089,7 @@ export function DashboardClient() {
                     <Switch
                       checked={applyFaq}
                       onCheckedChange={setApplyFaq}
-                      aria-label="Upsert FAQ in fortis_faq"
+                      aria-label="Save approved reply as an FAQ"
                     />
                     <span className="text-xs font-medium text-foreground">On</span>
                   </div>
@@ -1278,7 +1264,7 @@ export function DashboardClient() {
             </div>
           ) : (
             <p className="text-sm text-muted-foreground">
-              Unable to map this row — check `fortis_estimates` shape.
+              Unable to map this row. The estimate shape is not recognized.
             </p>
           )}
         </DialogContent>
