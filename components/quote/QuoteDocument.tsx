@@ -47,16 +47,16 @@ export function QuoteDocument({ quote }: { quote: QuoteDisplay }) {
           <section className="quote-break-inside-avoid grid gap-8 sm:grid-cols-2">
             <div>
               <h2 className="text-xs font-semibold uppercase tracking-wide text-stone-500">Bill to</h2>
-              <p className="mt-2 text-lg font-semibold text-foreground">{name}</p>
-              {company && contact ? <p className="mt-1 text-foreground">{contact}</p> : null}
-              <dl className="mt-4 space-y-1 text-sm text-foreground">
+              <p className="mt-2 text-lg font-semibold text-foreground print:text-slate-900">{name}</p>
+              {company && contact ? <p className="mt-1 text-foreground print:text-slate-900">{contact}</p> : null}
+              <dl className="mt-4 space-y-1 text-sm text-foreground print:text-slate-900">
                 <div className="flex gap-2">
-                  <dt className="w-14 shrink-0 font-medium text-foreground">Email</dt>
+                  <dt className="w-14 shrink-0 font-medium text-foreground print:text-slate-900">Email</dt>
                   <dd>
                     {quote.email.includes("@") ? (
                       <a
                         href={`mailto:${quote.email}`}
-                        className="text-foreground underline decoration-stone-300 underline-offset-2 hover:decoration-slate-600"
+                        className="text-foreground print:text-slate-900 underline decoration-stone-300 underline-offset-2 hover:decoration-slate-600"
                       >
                         {quote.email}
                       </a>
@@ -66,7 +66,7 @@ export function QuoteDocument({ quote }: { quote: QuoteDisplay }) {
                   </dd>
                 </div>
                 <div className="flex gap-2">
-                  <dt className="w-14 shrink-0 font-medium text-foreground">Phone</dt>
+                  <dt className="w-14 shrink-0 font-medium text-foreground print:text-slate-900">Phone</dt>
                   <dd>{quote.phone}</dd>
                 </div>
               </dl>
@@ -85,7 +85,7 @@ export function QuoteDocument({ quote }: { quote: QuoteDisplay }) {
             <h2 className="text-xs font-semibold uppercase tracking-wide text-stone-500">Line items</h2>
             <ul className="mt-4 space-y-4 sm:hidden">
               {quote.lines.map((line, i) => (
-                <li key={`${line.sku}-${i}`} className="text-sm text-foreground">
+                <li key={`${line.sku}-${i}`} className="text-sm text-foreground print:text-slate-900">
                   <p className="break-all font-mono">{line.sku}</p>
                   <p className="mt-1">{line.description}</p>
                   <dl className="mt-3 space-y-1">
@@ -187,11 +187,11 @@ export function QuoteDocument({ quote }: { quote: QuoteDisplay }) {
           <footer className="mt-10 border-t border-stone-100 pt-6 text-center text-xs text-stone-500">
             Fortis Edge · Quote reference only · Pricing subject to final confirmation.
           </footer>
-          <p className="mt-6 text-center text-sm text-foreground">
+          <p className="mt-6 text-center text-sm text-foreground print:text-slate-900">
             Questions or ready to order?{" "}
             <Link
               href="/assistant"
-              className="font-medium text-foreground underline decoration-stone-300 underline-offset-2 hover:decoration-slate-600"
+              className="font-medium text-foreground print:text-slate-900 underline decoration-stone-300 underline-offset-2 hover:decoration-slate-600"
             >
               Back to chat
             </Link>
