@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { QuoteDocument } from "@/components/quote/QuoteDocument";
@@ -5,6 +6,10 @@ import { QuoteConfigurationError, QuoteFetchError } from "@/components/quote/Quo
 import { loadEstimateForQuote } from "@/lib/quote/load-estimate";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: { absolute: "Your quote | Fortis Solutions Group" },
+};
 
 type PageProps = {
   params: Promise<{ id: string }>;
