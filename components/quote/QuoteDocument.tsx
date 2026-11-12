@@ -45,18 +45,18 @@ export function QuoteDocument({ quote }: { quote: QuoteDisplay }) {
 
         <div className="px-8 py-8">
           <section className="quote-break-inside-avoid grid gap-8 sm:grid-cols-2">
-            <div>
+            <div className="text-foreground print:text-slate-900">
               <h2 className="text-xs font-semibold uppercase tracking-wide text-stone-500">Bill to</h2>
-              <p className="mt-2 text-lg font-semibold text-foreground print:text-slate-900">{name}</p>
-              {company && contact ? <p className="mt-1 text-foreground print:text-slate-900">{contact}</p> : null}
-              <dl className="mt-4 space-y-1 text-sm text-foreground print:text-slate-900">
+              <p className="mt-2 text-lg font-semibold">{name}</p>
+              {company && contact ? <p className="mt-1">{contact}</p> : null}
+              <dl className="mt-4 space-y-1 text-sm">
                 <div className="flex gap-2">
-                  <dt className="w-14 shrink-0 font-medium text-foreground print:text-slate-900">Email</dt>
+                  <dt className="w-14 shrink-0 font-medium">Email</dt>
                   <dd>
                     {quote.email.includes("@") ? (
                       <a
                         href={`mailto:${quote.email}`}
-                        className="text-foreground print:text-slate-900 underline decoration-stone-300 underline-offset-2 hover:decoration-slate-600"
+                        className="underline decoration-stone-300 underline-offset-2 hover:decoration-slate-600"
                       >
                         {quote.email}
                       </a>
@@ -66,7 +66,7 @@ export function QuoteDocument({ quote }: { quote: QuoteDisplay }) {
                   </dd>
                 </div>
                 <div className="flex gap-2">
-                  <dt className="w-14 shrink-0 font-medium text-foreground print:text-slate-900">Phone</dt>
+                  <dt className="w-14 shrink-0 font-medium">Phone</dt>
                   <dd>{quote.phone}</dd>
                 </div>
               </dl>
@@ -83,9 +83,9 @@ export function QuoteDocument({ quote }: { quote: QuoteDisplay }) {
 
           <section className="mt-10">
             <h2 className="text-xs font-semibold uppercase tracking-wide text-stone-500">Line items</h2>
-            <ul className="mt-4 space-y-4 sm:hidden">
+            <ul className="mt-4 space-y-4 text-foreground print:text-slate-900 sm:hidden">
               {quote.lines.map((line, i) => (
-                <li key={`${line.sku}-${i}`} className="text-sm text-foreground print:text-slate-900">
+                <li key={`${line.sku}-${i}`} className="text-sm">
                   <p className="break-all font-mono">{line.sku}</p>
                   <p className="mt-1">{line.description}</p>
                   <dl className="mt-3 space-y-1">
@@ -191,7 +191,7 @@ export function QuoteDocument({ quote }: { quote: QuoteDisplay }) {
             Questions or ready to order?{" "}
             <Link
               href="/assistant"
-              className="font-medium text-foreground print:text-slate-900 underline decoration-stone-300 underline-offset-2 hover:decoration-slate-600"
+              className="font-medium underline decoration-stone-300 underline-offset-2 hover:decoration-slate-600"
             >
               Back to chat
             </Link>
