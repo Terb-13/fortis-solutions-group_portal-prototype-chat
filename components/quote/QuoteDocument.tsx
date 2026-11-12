@@ -47,16 +47,16 @@ export function QuoteDocument({ quote }: { quote: QuoteDisplay }) {
           <section className="quote-break-inside-avoid grid gap-8 sm:grid-cols-2">
             <div>
               <h2 className="text-xs font-semibold uppercase tracking-wide text-stone-500">Bill to</h2>
-              <p className="mt-2 text-lg font-semibold text-stone-900">{name}</p>
-              {company && contact ? <p className="mt-1 text-stone-800">{contact}</p> : null}
-              <dl className="mt-4 space-y-1 text-sm text-stone-600">
+              <p className="mt-2 text-lg font-semibold text-foreground">{name}</p>
+              {company && contact ? <p className="mt-1 text-foreground">{contact}</p> : null}
+              <dl className="mt-4 space-y-1 text-sm text-foreground">
                 <div className="flex gap-2">
-                  <dt className="w-14 shrink-0 font-medium text-stone-500">Email</dt>
+                  <dt className="w-14 shrink-0 font-medium text-foreground">Email</dt>
                   <dd>
                     {quote.email.includes("@") ? (
                       <a
                         href={`mailto:${quote.email}`}
-                        className="text-slate-800 underline decoration-stone-300 underline-offset-2 hover:decoration-slate-600"
+                        className="text-foreground underline decoration-stone-300 underline-offset-2 hover:decoration-slate-600"
                       >
                         {quote.email}
                       </a>
@@ -66,7 +66,7 @@ export function QuoteDocument({ quote }: { quote: QuoteDisplay }) {
                   </dd>
                 </div>
                 <div className="flex gap-2">
-                  <dt className="w-14 shrink-0 font-medium text-stone-500">Phone</dt>
+                  <dt className="w-14 shrink-0 font-medium text-foreground">Phone</dt>
                   <dd>{quote.phone}</dd>
                 </div>
               </dl>
@@ -83,7 +83,31 @@ export function QuoteDocument({ quote }: { quote: QuoteDisplay }) {
 
           <section className="mt-10">
             <h2 className="text-xs font-semibold uppercase tracking-wide text-stone-500">Line items</h2>
-            <div className="mt-4 overflow-x-auto rounded-lg border border-stone-200">
+            <ul className="mt-4 space-y-4 sm:hidden">
+              {quote.lines.map((line, i) => (
+                <li key={`${line.sku}-${i}`} className="text-sm text-foreground">
+                  <p className="break-all font-mono">{line.sku}</p>
+                  <p className="mt-1">{line.description}</p>
+                  <dl className="mt-3 space-y-1">
+                    <div className="flex justify-between gap-4">
+                      <dt>Qty</dt>
+                      <dd className="tabular-nums">{formatQty(line.quantity)}</dd>
+                    </div>
+                    <div className="flex justify-between gap-4">
+                      <dt>Unit</dt>
+                      <dd className="tabular-nums">
+                        {formatUnitPrice(line.quantity, line.unitPrice, line.total)}
+                      </dd>
+                    </div>
+                    <div className="flex justify-between gap-4">
+                      <dt>Line total</dt>
+                      <dd className="font-medium tabular-nums">{formatUsd(line.total)}</dd>
+                    </div>
+                  </dl>
+                </li>
+              ))}
+            </ul>
+            <div className="mt-4 hidden overflow-x-auto rounded-lg border border-stone-200 sm:block">
               <table className="min-w-full divide-y divide-stone-200 text-sm">
                 <thead className="bg-stone-50 print:bg-white">
                   <tr>
@@ -163,11 +187,11 @@ export function QuoteDocument({ quote }: { quote: QuoteDisplay }) {
           <footer className="mt-10 border-t border-stone-100 pt-6 text-center text-xs text-stone-500">
             Fortis Edge · Quote reference only · Pricing subject to final confirmation.
           </footer>
-          <p className="mt-6 text-center text-sm text-stone-700">
+          <p className="mt-6 text-center text-sm text-foreground">
             Questions or ready to order?{" "}
             <Link
               href="/assistant"
-              className="font-medium text-slate-800 underline decoration-stone-300 underline-offset-2 hover:decoration-slate-600"
+              className="font-medium text-foreground underline decoration-stone-300 underline-offset-2 hover:decoration-slate-600"
             >
               Back to chat
             </Link>
