@@ -12,16 +12,16 @@ import {
 import { PrintActions } from "./PrintActions";
 
 export function QuoteDocument({ quote }: { quote: QuoteDisplay }) {
-  const company = looksLikeQuoteParty(quote.businessName) ? quote.businessName.trim() : null;
-  const contact = looksLikeQuoteParty(quote.contactName) ? quote.contactName.trim() : null;
-  const email = quote.email.includes("@") ? quote.email.trim() : null;
-  const showEmailRow = Boolean(email && (company || contact));
+  const company = looksLikeQuoteParty(quote.businessName);
+  const contact = looksLikeQuoteParty(quote.contactName);
+  const email = quote.email.includes("@") ? quote.email : undefined;
+  const name = company ?? contact ?? email ?? "—";
 
   return (
     <div className="px-4 py-8 sm:px-6 lg:px-8">
       <PrintActions />
 
-      <article className="quote-sheet quote-break-inside-avoid overflow-hidden bg-white">
+      <article className="quote-sheet quote-break-inside-avoid overflow-hidden">
         <header className="border-b border-stone-200 bg-slate-900 px-8 py-8 text-white print:bg-white print:text-slate-900">
           <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
             <div>
@@ -47,42 +47,24 @@ export function QuoteDocument({ quote }: { quote: QuoteDisplay }) {
           <section className="quote-break-inside-avoid grid gap-8 sm:grid-cols-2">
             <div>
               <h2 className="text-xs font-semibold uppercase tracking-wide text-stone-500">Bill to</h2>
-              {company ? (
-                <p className="mt-2 text-lg font-semibold text-stone-900">{company}</p>
-              ) : null}
-              {contact ? (
-                <p className={company ? "mt-1 text-stone-800" : "mt-2 text-lg font-semibold text-stone-900"}>
-                  {contact}
-                </p>
-              ) : null}
-              {!company && !contact ? (
-                email ? (
-                  <p className="mt-2 text-lg font-semibold text-stone-900">
-                    <a
-                      href={`mailto:${email}`}
-                      className="underline decoration-stone-300 underline-offset-2 hover:decoration-slate-600"
-                    >
-                      {email}
-                    </a>
-                  </p>
-                ) : (
-                  <p className="mt-2 text-lg font-semibold text-stone-900">—</p>
-                )
-              ) : null}
+              <p className="mt-2 text-lg font-semibold text-stone-900">{name}</p>
+              {company && contact ? <p className="mt-1 text-stone-800">{contact}</p> : null}
               <dl className="mt-4 space-y-1 text-sm text-stone-600">
-                {showEmailRow ? (
-                  <div className="flex gap-2">
-                    <dt className="w-14 shrink-0 font-medium text-stone-500">Email</dt>
-                    <dd>
+                <div className="flex gap-2">
+                  <dt className="w-14 shrink-0 font-medium text-stone-500">Email</dt>
+                  <dd>
+                    {quote.email.includes("@") ? (
                       <a
-                        href={`mailto:${email}`}
+                        href={`mailto:${quote.email}`}
                         className="text-slate-800 underline decoration-stone-300 underline-offset-2 hover:decoration-slate-600"
                       >
-                        {email}
+                        {quote.email}
                       </a>
-                    </dd>
-                  </div>
-                ) : null}
+                    ) : (
+                      quote.email
+                    )}
+                  </dd>
+                </div>
                 <div className="flex gap-2">
                   <dt className="w-14 shrink-0 font-medium text-stone-500">Phone</dt>
                   <dd>{quote.phone}</dd>
