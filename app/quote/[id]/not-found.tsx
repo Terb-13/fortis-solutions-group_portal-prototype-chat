@@ -1,9 +1,4 @@
-import type { Metadata } from "next";
 import Link from "next/link";
-
-export const metadata: Metadata = {
-  title: { absolute: "Quote not found | Fortis Solutions Group" },
-};
 
 export default function QuoteNotFound() {
   return (

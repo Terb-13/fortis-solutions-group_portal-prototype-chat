@@ -7,9 +7,17 @@ import { loadEstimateForQuote } from "@/lib/quote/load-estimate";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  title: { absolute: "Your quote | Fortis Solutions Group" },
-};
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const result = await loadEstimateForQuote((await params).id);
+  const missing = !result.ok && result.reason === "not-found";
+  return {
+    title: {
+      absolute: missing
+        ? "Quote not found | Fortis Solutions Group"
+        : "Your quote | Fortis Solutions Group",
+    },
+  };
+}
 
 type PageProps = {
   params: Promise<{ id: string }>;

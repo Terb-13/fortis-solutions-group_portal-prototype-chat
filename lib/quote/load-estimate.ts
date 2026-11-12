@@ -1,5 +1,7 @@
 import "server-only";
 
+import { cache } from "react";
+
 import { mapEstimateRow, type QuoteDisplay } from "@/lib/quote/map-estimate-row";
 import { getSupabaseAdmin, isSupabaseAdminConfigured } from "@/lib/supabase/admin";
 
@@ -31,7 +33,7 @@ export type LoadEstimateResult =
  * Loads one estimate for the public quote page.
  * Service role, server-only. A non-UUID id is treated as not found.
  */
-export async function loadEstimateForQuote(id: string): Promise<LoadEstimateResult> {
+export const loadEstimateForQuote = cache(async (id: string): Promise<LoadEstimateResult> => {
   const trimmed = id.trim();
   if (!UUID_RE.test(trimmed)) {
     return { ok: false, reason: "not-found" };
@@ -59,4 +61,4 @@ export async function loadEstimateForQuote(id: string): Promise<LoadEstimateResu
   }
 
   return { ok: true, quote };
-}
+});
