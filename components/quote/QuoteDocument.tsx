@@ -177,7 +177,7 @@ export function QuoteDocument({ quote }: { quote: QuoteDisplay }) {
 
           <section className="mt-10 border-t border-stone-200 pt-8">
             <h2 className="text-xs font-semibold uppercase tracking-wide text-stone-500">Notes</h2>
-            <div className="mt-3 space-y-3 text-sm leading-relaxed text-stone-700">
+            <div className="mt-3 space-y-3 text-sm leading-relaxed text-stone-400 print:text-stone-700">
               {quote.notes.split(/\n+/).map((para, idx) => (
                 <p key={idx}>{para}</p>
               ))}
