@@ -18,7 +18,7 @@ export function QuoteDocument({ quote }: { quote: QuoteDisplay }) {
   const name = company ?? contact ?? email ?? "—";
 
   return (
-    <div className="px-4 py-8 sm:px-6 lg:px-8">
+    <div className="px-4 py-8 print:bg-white sm:px-6 lg:px-8">
       <PrintActions />
 
       <article className="quote-sheet quote-break-inside-avoid overflow-hidden">
